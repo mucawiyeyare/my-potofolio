@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showPhoto, setShowPhoto] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
@@ -43,24 +44,34 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
+    <>
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group min-w-0 max-w-[68%] sm:max-w-none">
-            <img
-              src="/profile.jpg"
-              alt="Eng. Abdirahman"
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-500 shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
-            />
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate"
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 max-w-[68%] sm:max-w-none">
+            <button
+              type="button"
+              onClick={() => setShowPhoto(true)}
+              title="View photo"
+              className="flex-shrink-0 rounded-full group"
             >
-              <span className="hidden sm:inline text-lg sm:text-xl">Eng.Abdirahman Mohamed Ibrahim</span>
-              <span className="sm:hidden text-sm font-bold truncate">Eng. Abdirahman</span>
-            </motion.div>
-          </Link>
+              <img
+                src="/profile.jpg"
+                alt="Eng. Abdirahman"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-500 shadow-sm group-hover:scale-105 transition-transform duration-200"
+              />
+            </button>
+            <Link to="/" className="flex items-center min-w-0 group">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate"
+              >
+                <span className="hidden sm:inline text-lg sm:text-xl">Eng.Abdirahman Mohamed Ibrahim</span>
+                <span className="sm:hidden text-sm font-bold truncate">Eng. Abdirahman</span>
+              </motion.div>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
@@ -220,6 +231,39 @@ const Navbar = () => {
         </motion.div>
       </div>
     </nav>
+
+    {/* Profile Photo Modal */}
+    {showPhoto && (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setShowPhoto(false)}
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          onClick={(e) => e.stopPropagation()}
+          className="relative max-w-sm w-full"
+        >
+          <button
+            type="button"
+            onClick={() => setShowPhoto(false)}
+            aria-label="Close"
+            className="absolute -top-10 right-0 sm:-right-10 sm:top-0 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors duration-200"
+          >
+            <HiX className="w-6 h-6" />
+          </button>
+          <img
+            src="/profile.jpg"
+            alt="Eng. Abdirahman Mohamed Ibrahim"
+            className="w-full rounded-2xl border-4 border-white/20 shadow-2xl object-cover"
+          />
+        </motion.div>
+      </motion.div>
+    )}
+    </>
   );
 };
 

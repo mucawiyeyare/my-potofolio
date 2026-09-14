@@ -8,11 +8,11 @@ export const APP_CONFIG = {
 // Personal Information
 export const PERSONAL_INFO = {
   name: 'Eng Abdirahman Mohamed Ibrahim',
-  title: 'Full-Stack Developer & UI/UX Specialist',
+  title: 'Full-Stack Developer & Data Analyst',
   email: 'abdirahm916@gmail.com',
   phone: '+252 616408886',
   location: 'Mogadishu, Somalia',
-  bio: `I'm a passionate full-stack developer, Web Development Teacher & Administrator at Iftiinhub College for the past year, and Class Student Assistant at Hormuud University (Faculty of Computer Science). My expertise spans React, Node.js, JavaScript, MongoDB, Express, and database management.`,
+  bio: `I'm a passionate full-stack developer and data analyst, Web Development Teacher & Administrator at Iftiinhub College for the past year, and Class Student Assistant at Hormuud University (Faculty of Computer Science). My expertise spans React, Node.js, JavaScript, MongoDB, Express, database management, and turning complex data into meaningful insights.`,
   
   // Social Links
   social: {
@@ -95,9 +95,9 @@ export const ANIMATION_CONFIG = {
 
 // SEO Configuration
 export const SEO_CONFIG = {
-  defaultTitle: 'Personal Portfolio - Full-Stack Developer',
+  defaultTitle: 'Personal Portfolio - Full-Stack Developer & Data Analyst',
   titleTemplate: '%s | Personal Portfolio',
-  defaultDescription: 'Full-stack developer passionate about creating innovative solutions and beautiful user experiences.',
+  defaultDescription: 'Full-stack developer and data analyst passionate about building scalable web applications and turning data into meaningful insights.',
   siteUrl: 'https://your-domain.com',
   defaultImage: '/og-image.jpg',
   twitterHandle: '@yourusername',

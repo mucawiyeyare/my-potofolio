@@ -194,8 +194,20 @@ const Home = () => {
                   transition={{ duration: 0.8, delay: 0.6 }}
                   className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed"
                 >
-                  I create exceptional digital experiences through clean code, 
-                  innovative solutions, and user-centered design. Check out my live production systems below.
+                  I create exceptional digital experiences through clean code, innovative solutions,
+                  and user-centered design. As a Full-Stack Developer and Data Analyst, I build scalable
+                  web applications, develop efficient software solutions, and transform complex data into
+                  meaningful insights that drive informed decisions.
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                  className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed"
+                >
+                  Explore my live production systems and discover how I combine technology,
+                  creativity, and data to solve real-world problems.
                 </motion.p>
               </div>
 

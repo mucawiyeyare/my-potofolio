@@ -67,12 +67,12 @@ const About = () => {
               About Me
             </h1>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-              I'm <strong>Eng Abdirahman Mohamed Ibrahim</strong>, a dedicated full-stack developer, 
-              <strong> Web Development Teacher & Administrator at Iftiinhub College</strong> for the past year, 
+              I'm <strong>Eng Abdirahman Mohamed Ibrahim</strong>, a dedicated full-stack developer and data analyst,
+              <strong> Web Development Teacher & Administrator at Iftiinhub College</strong> for the past year,
               and an active <strong>Student Assistant</strong> for my class at <strong>Hormuud University</strong> (Faculty of Computer Science).
             </p>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-              I combine hands-on software development with teaching and academic mentorship—empowering students in web development while engineering robust full-stack applications using React, Node.js, Express, and MongoDB.
+              I combine hands-on software development with teaching and academic mentorship—empowering students in web development while engineering robust full-stack applications using React, Node.js, Express, and MongoDB, and turning complex data into clear, actionable insights.
             </p>
           </motion.div>
 
