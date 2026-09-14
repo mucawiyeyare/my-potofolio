@@ -9,7 +9,7 @@ export const APP_CONFIG = {
 export const PERSONAL_INFO = {
   name: 'Eng Abdirahman Mohamed Ibrahim',
   title: 'Full-Stack Developer & UI/UX Specialist',
-  email: 'Abdirah916@gmail.com',
+  email: 'abdirahm916@gmail.com',
   phone: '+252 616408886',
   location: 'Mogadishu, Somalia',
   bio: `I'm a passionate full-stack developer, Web Development Teacher & Administrator at Iftiinhub College for the past year, and Class Student Assistant at Hormuud University (Faculty of Computer Science). My expertise spans React, Node.js, JavaScript, MongoDB, Express, and database management.`,
@@ -19,7 +19,7 @@ export const PERSONAL_INFO = {
     github: 'https://github.com/mucawiyeyare',
     linkedin: 'https://linkedin.com/in/mucawiyeyare',
     twitter: 'https://twitter.com/mucawiyeyare',
-    email: 'mailto:Abdirah916@gmail.com',
+    email: 'mailto:abdirahm916@gmail.com',
   },
   
   // Resume/CV

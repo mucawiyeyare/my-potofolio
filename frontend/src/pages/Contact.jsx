@@ -13,8 +13,9 @@ const Contact = () => {
     {
       icon: FaEnvelope,
       title: 'Email',
-      value: 'Abdirah916@gmail.com',
-      link: 'mailto:Abdirah916@gmail.com'
+      value: 'abdirahm916@gmail.com',
+      secondaryValue: 'Abdirah916@gmail.com',
+      link: 'mailto:abdirahm916@gmail.com'
     },
     {
       icon: FaPhone,
@@ -264,12 +265,22 @@ const Contact = () => {
                         {info.title}
                       </h3>
                       {info.link ? (
-                        <a
-                          href={info.link}
-                          className="text-lg font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
-                        >
-                          {info.value}
-                        </a>
+                        <div className="flex flex-col">
+                          <a
+                            href={info.link}
+                            className="text-base sm:text-lg font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                          >
+                            {info.value}
+                          </a>
+                          {info.secondaryValue && (
+                            <a
+                              href={`mailto:${info.secondaryValue}`}
+                              className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                            >
+                              {info.secondaryValue}
+                            </a>
+                          )}
+                        </div>
                       ) : (
                         <p className="text-lg font-medium text-gray-900 dark:text-white">
                           {info.value}

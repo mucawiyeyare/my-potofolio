@@ -1,10 +1,10 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaLock, FaUser, FaEye, FaEyeSlash, FaKey } from 'react-icons/fa';
+import { FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 const AdminAuth = ({ onAuthenticated }) => {
-  const [username, setUsername] = useState('admin');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,15 +23,10 @@ const AdminAuth = ({ onAuthenticated }) => {
         onAuthenticated();
         toast.success(`Welcome back, ${username.trim() || 'Admin'}!`);
       } else {
-        toast.error('Invalid password. Use: admin123');
+        toast.error('Invalid username or password');
       }
       setIsLoading(false);
     }, 600);
-  };
-
-  const handleFillCredentials = () => {
-    setUsername('admin');
-    setPassword('admin123');
   };
 
   return (
@@ -53,26 +48,6 @@ const AdminAuth = ({ onAuthenticated }) => {
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Sign in to manage projects and read contact messages
             </p>
-          </div>
-
-          {/* Credentials Info Card */}
-          <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800">
-            <div className="flex items-center justify-between mb-2">
-              <span className="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
-                <FaKey className="w-3.5 h-3.5" /> Sign In Credentials
-              </span>
-              <button
-                type="button"
-                onClick={handleFillCredentials}
-                className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Auto-fill
-              </button>
-            </div>
-            <div className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
-              <p><strong className="text-gray-900 dark:text-white">Username:</strong> <code className="bg-white dark:bg-gray-800 px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 font-mono">admin</code></p>
-              <p><strong className="text-gray-900 dark:text-white">Password:</strong> <code className="bg-white dark:bg-gray-800 px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 font-mono">admin123</code></p>
-            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
