@@ -3,81 +3,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaEnvelope, FaUser, FaClock, FaTrash, FaEye, FaEyeSlash,
   FaSignOutAlt, FaTachometerAlt, FaGithub, FaExternalLinkAlt,
-  FaPlus, FaEdit, FaSave, FaTimes, FaCode, FaProjectDiagram
+  FaPlus, FaEdit, FaSave, FaTimes, FaCode, FaProjectDiagram, FaGlobe
 } from 'react-icons/fa';
 import { contactAPI } from '../utils/api';
 import toast from 'react-hot-toast';
 import Loading from '../components/Loading';
 import AdminAuth from '../components/AdminAuth';
 import { useNavigate } from 'react-router-dom';
-
-// ─── Default projects stored in localStorage ────────────────────────────────
-const DEFAULT_PROJECTS = [
-  {
-    id: 1,
-    title: 'Blood Donation Management System',
-    description: 'A full-stack web application connecting blood donors with recipients, managing blood inventory, and coordinating emergency blood requests in real-time.',
-    technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
-    githubUrl: 'https://github.com/mucawiyeyare',
-    liveUrl: 'https://github.com/mucawiyeyare',
-  },
-  {
-    id: 2,
-    title: 'Hotel Management System',
-    description: 'A modern web-based hotel reservation and management platform for handling room bookings, guest check-ins/outs, billing, and room availability.',
-    technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
-    githubUrl: 'https://github.com/mucawiyeyare',
-    liveUrl: 'https://github.com/mucawiyeyare',
-  },
-  {
-    id: 3,
-    title: 'School Management System',
-    description: 'An all-in-one educational portal for managing student records, attendance, grades, course schedules, and teacher-parent communication.',
-    technologies: ['React', 'Node.js', 'MongoDB', 'JavaScript', 'Tailwind CSS'],
-    githubUrl: 'https://github.com/mucawiyeyare',
-    liveUrl: 'https://github.com/mucawiyeyare',
-  },
-  {
-    id: 4,
-    title: 'E-learning Platform',
-    description: 'Interactive online learning platform with video courses, quizzes, student progress tracking, and certificate generation.',
-    technologies: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
-    githubUrl: 'https://github.com/mucawiyeyare',
-    liveUrl: 'https://github.com/mucawiyeyare',
-  },
-  {
-    id: 5,
-    title: 'Blog & Content Platform',
-    description: 'A modern blogging platform with markdown support, comment system, category filtering, and SEO optimization.',
-    technologies: ['React', 'Node.js', 'MongoDB', 'Tailwind CSS'],
-    githubUrl: 'https://github.com/mucawiyeyare',
-    liveUrl: 'https://github.com/mucawiyeyare',
-  },
-];
-
-const PROJECTS_KEY = 'portfolio_projects';
-
-const getProjects = () => {
-  try {
-    const stored = localStorage.getItem(PROJECTS_KEY);
-    return stored ? JSON.parse(stored) : DEFAULT_PROJECTS;
-  } catch {
-    return DEFAULT_PROJECTS;
-  }
-};
-
-const saveProjects = (projects) => {
-  localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
-};
+import { getStoredProjects, saveStoredProjects } from '../utils/projectsData';
 
 // ─── Empty project form ──────────────────────────────────────────────────────
 const emptyProject = {
-  id: null,
+  id: '',
+  name: '',
   title: '',
+  domain: '',
+  category: 'Fullstack',
   description: '',
   technologies: '',
-  githubUrl: '',
   liveUrl: '',
+  githubUrl: '',
+  logo: '',
+  logoFallback: '🚀',
+  logoBg: 'from-blue-600 to-purple-700',
+  featured: true,
 };
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -93,7 +42,7 @@ const Admin = () => {
   const [form, setForm]                       = useState(emptyProject);
   const navigate = useNavigate();
 
-  // ── Auth check ─────────────────────────────────────────────────────────────
+  // ── Auth & Data Loading ───────────────────────────────────────────────────
   useEffect(() => {
     const authStatus = localStorage.getItem('adminAuth');
     if (authStatus === 'true') {
@@ -102,12 +51,22 @@ const Admin = () => {
     } else {
       setLoading(false);
     }
-    setProjects(getProjects());
+    setProjects(getStoredProjects());
+
+    const handleUpdate = () => {
+      setProjects(getStoredProjects());
+    };
+    window.addEventListener('portfolio_projects_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('portfolio_projects_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, []);
 
   const handleAuthenticated = () => {
     setIsAuthenticated(true);
-    setProjects(getProjects());
+    setProjects(getStoredProjects());
     fetchMessages();
   };
 
@@ -170,16 +129,30 @@ const Admin = () => {
 
   // ── Projects ────────────────────────────────────────────────────────────────
   const openNew = () => {
-    setForm({ ...emptyProject, id: Date.now() });
+    setForm({
+      ...emptyProject,
+      id: 'proj_' + Date.now(),
+    });
     setEditingProject('new');
   };
 
   const openEdit = (project) => {
+    const rawTech = project.technologies || project.tech || [];
+    const techStr = Array.isArray(rawTech) ? rawTech.join(', ') : String(rawTech || '');
     setForm({
-      ...project,
-      technologies: Array.isArray(project.technologies)
-        ? project.technologies.join(', ')
-        : project.technologies,
+      id: project.id,
+      name: project.name || project.title || '',
+      title: project.title || project.name || '',
+      domain: project.domain || '',
+      category: project.category || 'Fullstack',
+      description: project.description || '',
+      technologies: techStr,
+      liveUrl: project.liveUrl || project.live || '',
+      githubUrl: project.githubUrl || project.github || '',
+      logo: project.logo || project.imageUrl || '',
+      logoFallback: project.logoFallback || '🚀',
+      logoBg: project.logoBg || 'from-blue-600 to-purple-700',
+      featured: project.featured !== false,
     });
     setEditingProject(project.id);
   };
@@ -190,31 +163,57 @@ const Admin = () => {
   };
 
   const saveProject = () => {
-    if (!form.title.trim()) { toast.error('Title is required'); return; }
+    if (!form.title.trim() && !form.name.trim()) {
+      toast.error('Project title or name is required');
+      return;
+    }
+    const title = form.title.trim() || form.name.trim();
+    const name = form.name.trim() || title;
     const techArray = form.technologies
-      .split(',')
-      .map(t => t.trim())
-      .filter(Boolean);
+      ? form.technologies.split(',').map(t => t.trim()).filter(Boolean)
+      : [];
 
-    const updated = { ...form, technologies: techArray };
+    const live = form.liveUrl.trim();
+    const github = form.githubUrl.trim();
+    const domain = form.domain.trim() || (live ? live.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : '');
+
+    const updated = {
+      ...form,
+      id: form.id || ('proj_' + Date.now()),
+      title,
+      name,
+      domain,
+      category: form.category || 'Fullstack',
+      description: form.description.trim(),
+      technologies: techArray,
+      tech: techArray,
+      liveUrl: live,
+      live: live,
+      githubUrl: github,
+      github: github,
+      logo: form.logo.trim(),
+      logoFallback: form.logoFallback || '🚀',
+      logoBg: form.logoBg || 'from-blue-600 to-purple-700',
+      featured: true,
+    };
 
     let next;
     if (editingProject === 'new') {
-      next = [...projects, updated];
+      next = [updated, ...projects];
     } else {
       next = projects.map(p => p.id === updated.id ? updated : p);
     }
     setProjects(next);
-    saveProjects(next);
-    toast.success(editingProject === 'new' ? 'Project added!' : 'Project updated!');
+    saveStoredProjects(next);
+    toast.success(editingProject === 'new' ? 'Project created and published to Home & Projects!' : 'Project updated and published!');
     closeForm();
   };
 
   const deleteProject = (id) => {
-    if (!window.confirm('Delete this project?')) return;
+    if (!window.confirm('Delete this project? It will also be removed from the Home and Projects pages.')) return;
     const next = projects.filter(p => p.id !== id);
     setProjects(next);
-    saveProjects(next);
+    saveStoredProjects(next);
     toast.success('Project deleted');
   };
 
@@ -518,53 +517,183 @@ const Admin = () => {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden mb-8"
                   >
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border-2 border-blue-500">
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-5">
-                        {editingProject === 'new' ? '✨ New Project' : '✏️ Edit Project'}
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {[
-                          { key: 'title',        label: 'Project Title',         placeholder: 'My Awesome Project' },
-                          { key: 'description',  label: 'Description',           placeholder: 'A brief description…' },
-                          { key: 'technologies', label: 'Technologies (comma-separated)', placeholder: 'React, Node.js, MongoDB' },
-                          { key: 'githubUrl',    label: 'GitHub URL',            placeholder: 'https://github.com/you/repo' },
-                          { key: 'liveUrl',      label: 'Live URL',              placeholder: 'https://yourproject.com' },
-                        ].map(field => (
-                          <div key={field.key} className={field.key === 'description' ? 'md:col-span-2' : ''}>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                              {field.label}
-                            </label>
-                            {field.key === 'description' ? (
-                              <textarea
-                                rows={3}
-                                value={form[field.key]}
-                                onChange={e => setForm({ ...form, [field.key]: e.target.value })}
-                                placeholder={field.placeholder}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-                              />
-                            ) : (
-                              <input
-                                type={field.key.includes('Url') ? 'url' : 'text'}
-                                value={form[field.key]}
-                                onChange={e => setForm({ ...form, [field.key]: e.target.value })}
-                                placeholder={field.placeholder}
-                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                              />
-                            )}
-                          </div>
-                        ))}
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 border-2 border-blue-500">
+                      <div className="flex items-center justify-between pb-4 mb-6 border-b border-gray-100 dark:border-gray-700">
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                            {editingProject === 'new' ? '✨ Add New Portfolio Project / System' : '✏️ Edit Project / System'}
+                          </h3>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            Changes saved here immediately update the Home and Projects pages.
+                          </p>
+                        </div>
+                        <button
+                          onClick={closeForm}
+                          className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg"
+                        >
+                          <FaTimes className="w-5 h-5" />
+                        </button>
                       </div>
-                      <div className="flex space-x-3 mt-5">
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {/* Title */}
+                        <div className="md:col-span-2">
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Full Project Title *
+                          </label>
+                          <input
+                            type="text"
+                            value={form.title}
+                            onChange={e => setForm({ ...form, title: e.target.value })}
+                            placeholder="e.g. SNAB Dental & Dermatologic Clinic"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            required
+                          />
+                        </div>
+
+                        {/* Short Name / Identifier */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            System Short Name / Identifier
+                          </label>
+                          <input
+                            type="text"
+                            value={form.name}
+                            onChange={e => setForm({ ...form, name: e.target.value })}
+                            placeholder="e.g. snabdental or Blood Bank"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* Category */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Category
+                          </label>
+                          <select
+                            value={form.category}
+                            onChange={e => setForm({ ...form, category: e.target.value })}
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          >
+                            <option value="Fullstack">Fullstack</option>
+                            <option value="Fullstack + Data">Fullstack + Data</option>
+                            <option value="Data Analyst">Data Analyst</option>
+                            <option value="Frontend">Frontend</option>
+                            <option value="Backend">Backend</option>
+                            <option value="Mobile App">Mobile App</option>
+                          </select>
+                        </div>
+
+                        {/* Domain */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Subdomain / Domain
+                          </label>
+                          <input
+                            type="text"
+                            value={form.domain}
+                            onChange={e => setForm({ ...form, domain: e.target.value })}
+                            placeholder="e.g. snabdental.iftiinhub.com"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* Live URL */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Live URL
+                          </label>
+                          <input
+                            type="url"
+                            value={form.liveUrl}
+                            onChange={e => setForm({ ...form, liveUrl: e.target.value })}
+                            placeholder="https://snabdental.iftiinhub.com"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* GitHub URL */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            GitHub URL
+                          </label>
+                          <input
+                            type="url"
+                            value={form.githubUrl}
+                            onChange={e => setForm({ ...form, githubUrl: e.target.value })}
+                            placeholder="https://github.com/mucawiyeyare/..."
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* Logo Image URL */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Logo Image URL
+                          </label>
+                          <input
+                            type="text"
+                            value={form.logo}
+                            onChange={e => setForm({ ...form, logo: e.target.value })}
+                            placeholder="https://snabdental.iftiinhub.com/logo.png"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* Fallback Emoji / Icon */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Fallback Icon / Emoji
+                          </label>
+                          <input
+                            type="text"
+                            value={form.logoFallback}
+                            onChange={e => setForm({ ...form, logoFallback: e.target.value })}
+                            placeholder="🦷 or 🩸 or 📚 or 🎓 or 🚀"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* Technologies */}
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Technologies (comma-separated)
+                          </label>
+                          <input
+                            type="text"
+                            value={form.technologies}
+                            onChange={e => setForm({ ...form, technologies: e.target.value })}
+                            placeholder="ReactJS, NodeJS, MongoDB, Tailwind, Express"
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                          />
+                        </div>
+
+                        {/* Description */}
+                        <div className="md:col-span-2">
+                          <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                            Description
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={form.description}
+                            onChange={e => setForm({ ...form, description: e.target.value })}
+                            placeholder="A concise summary of what this platform accomplishes..."
+                            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
                         <button
                           onClick={saveProject}
-                          className="flex items-center px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-200"
+                          className="flex items-center px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-sm font-bold shadow hover:shadow-lg transition-all duration-200"
                         >
                           <FaSave className="w-4 h-4 mr-2" />
-                          Save
+                          {editingProject === 'new' ? 'Create & Publish Project' : 'Save & Publish Changes'}
                         </button>
                         <button
                           onClick={closeForm}
-                          className="flex items-center px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                           <FaTimes className="w-4 h-4 mr-2" />
                           Cancel
@@ -577,78 +706,136 @@ const Admin = () => {
 
               {/* Projects Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {projects.map((project, idx) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.08 }}
-                    whileHover={{ y: -4 }}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden"
-                  >
-                    {/* Card Header */}
-                    <div className="h-24 bg-gradient-to-br from-blue-500 to-purple-600 relative flex items-center justify-center">
-                      <FaCode className="w-10 h-10 text-white/40" />
-                      <div className="absolute top-3 right-3 flex space-x-2">
-                        <button
-                          onClick={() => openEdit(project)}
-                          className="p-1.5 bg-white/20 hover:bg-white/40 text-white rounded-lg transition-colors"
-                          title="Edit project"
-                        >
-                          <FaEdit className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => deleteProject(project.id)}
-                          className="p-1.5 bg-red-500/60 hover:bg-red-500/80 text-white rounded-lg transition-colors"
-                          title="Delete project"
-                        >
-                          <FaTrash className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
+                {projects.map((project, idx) => {
+                  const title = project.title || project.name || 'Untitled Project';
+                  const name = project.name || project.title || 'Project';
+                  const live = project.liveUrl || project.live || '';
+                  const domain = project.domain || (live ? live.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : '');
+                  const rawTech = project.technologies || project.tech || [];
+                  const techList = Array.isArray(rawTech) ? rawTech : String(rawTech).split(',').map(s => s.trim()).filter(Boolean);
+                  const logo = project.logo || project.imageUrl || '';
+                  const logoFallback = project.logoFallback || '🚀';
+                  const logoBg = project.logoBg || 'from-blue-600 to-purple-700';
 
-                    {/* Card Body */}
-                    <div className="p-5">
-                      <h3 className="font-bold text-gray-900 dark:text-white text-base mb-2">{project.title}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{project.description}</p>
-
-                      {/* Tech tags */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {(Array.isArray(project.technologies) ? project.technologies : []).map(t => (
-                          <span key={t} className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs rounded-full">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Links */}
-                      <div className="flex space-x-2">
-                        {project.githubUrl ? (
-                          <a href={project.githubUrl} target="_blank" rel="noreferrer"
-                            className="flex items-center px-3 py-1.5 bg-gray-900 dark:bg-gray-700 text-white rounded-lg text-xs font-medium hover:bg-gray-800 transition-colors">
-                            <FaGithub className="w-3.5 h-3.5 mr-1.5" /> GitHub
-                          </a>
+                  return (
+                    <motion.div
+                      key={project.id || idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      whileHover={{ y: -4 }}
+                      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden border border-gray-100 dark:border-gray-700"
+                    >
+                      {/* Banner */}
+                      <div className={`h-36 bg-gradient-to-br ${logoBg} relative flex items-center justify-center`}>
+                        {logo ? (
+                          <img
+                            src={logo}
+                            alt={title}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            className="h-20 w-20 object-contain drop-shadow-lg"
+                          />
                         ) : (
-                          <button onClick={() => openEdit(project)}
-                            className="flex items-center px-3 py-1.5 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-400 rounded-lg text-xs hover:border-blue-400 hover:text-blue-500 transition-colors">
-                            <FaGithub className="w-3.5 h-3.5 mr-1.5" /> Add GitHub
-                          </button>
+                          <span className="text-5xl">{logoFallback}</span>
                         )}
-                        {project.liveUrl ? (
-                          <a href={project.liveUrl} target="_blank" rel="noreferrer"
-                            className="flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-700 transition-colors">
-                            <FaExternalLinkAlt className="w-3 h-3 mr-1.5" /> Live
-                          </a>
-                        ) : (
-                          <button onClick={() => openEdit(project)}
-                            className="flex items-center px-3 py-1.5 border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-400 rounded-lg text-xs hover:border-blue-400 hover:text-blue-500 transition-colors">
-                            <FaExternalLinkAlt className="w-3 h-3 mr-1.5" /> Add Link
+
+                        {/* Category badge */}
+                        <div className="absolute bottom-3 left-3 bg-black/50 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[11px] text-white font-semibold">
+                          {project.category || 'Fullstack'}
+                        </div>
+
+                        {/* Live status badge */}
+                        <div className="absolute bottom-3 right-3 bg-emerald-900/70 border border-emerald-500/50 backdrop-blur-sm px-2 py-0.5 rounded-full text-[10px] text-emerald-300 font-bold uppercase tracking-wider flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                          Live
+                        </div>
+
+                        {/* Action buttons */}
+                        <div className="absolute top-3 right-3 flex space-x-1.5">
+                          <button
+                            onClick={() => openEdit(project)}
+                            className="p-2 bg-black/40 hover:bg-black/70 text-white rounded-lg transition-colors backdrop-blur-sm shadow"
+                            title="Edit project"
+                          >
+                            <FaEdit className="w-3.5 h-3.5" />
                           </button>
-                        )}
+                          <button
+                            onClick={() => deleteProject(project.id)}
+                            className="p-2 bg-red-600/70 hover:bg-red-600 text-white rounded-lg transition-colors backdrop-blur-sm shadow"
+                            title="Delete project"
+                          >
+                            <FaTrash className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+
+                      {/* Card Body */}
+                      <div className="p-5 flex flex-col flex-1">
+                        <h3 className="font-bold text-gray-900 dark:text-white text-base mb-1 truncate" title={title}>
+                          {title}
+                        </h3>
+
+                        {domain && (
+                          <div className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-mono mb-2">
+                            <FaGlobe className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{domain}</span>
+                          </div>
+                        )}
+
+                        <p className="text-xs text-gray-600 dark:text-gray-300 mb-3 line-clamp-2 leading-relaxed flex-1">
+                          {project.description}
+                        </p>
+
+                        {/* Tech tags */}
+                        <div className="flex flex-wrap gap-1.5 mb-4">
+                          {techList.slice(0, 5).map(t => (
+                            <span key={t} className="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-[11px] font-medium rounded-full border border-blue-200 dark:border-blue-800">
+                              {t}
+                            </span>
+                          ))}
+                          {techList.length > 5 && (
+                            <span className="px-1.5 py-0.5 text-gray-400 text-[11px]">
+                              +{techList.length - 5}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Links & Edit */}
+                        <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                          <div className="flex space-x-2">
+                            {live && (
+                              <a
+                                href={live}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors"
+                              >
+                                <FaExternalLinkAlt className="w-2.5 h-2.5 mr-1" /> Live
+                              </a>
+                            )}
+                            {(project.githubUrl || project.github) && (
+                              <a
+                                href={project.githubUrl || project.github}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center px-3 py-1.5 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 text-white rounded-lg text-xs font-semibold transition-colors"
+                              >
+                                <FaGithub className="w-3 h-3 mr-1" /> Code
+                              </a>
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => openEdit(project)}
+                            className="text-xs text-purple-600 dark:text-purple-400 font-bold hover:underline flex items-center gap-1"
+                          >
+                            <FaEdit className="w-3 h-3" /> Edit
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </motion.div>
           )}

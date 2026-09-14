@@ -1,82 +1,43 @@
-import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaCode, FaRocket, FaPalette, FaExternalLinkAlt, FaGlobe } from 'react-icons/fa';
 import { HiLightningBolt } from 'react-icons/hi';
-
-const TOP_LIVE_PROJECTS = [
-  {
-    name: 'snabdental',
-    title: 'SNAB Dental & Dermatologic Clinic',
-    domain: 'snabdental.iftiinhub.com',
-    logo: 'https://snabdental.iftiinhub.com/logo.png',
-    logoFallback: '🦷',
-    logoBg: 'from-blue-600 to-blue-800',
-    description: 'A modern dental management system for clinics to securely store patient records, treatment histories, and appointments in one centralized system.',
-    tech: ['HTML', 'CSS', 'JS', 'ReactJS', 'NodeJS', 'MongoDB'],
-    live: 'https://snabdental.iftiinhub.com',
-    category: 'Fullstack',
-  },
-  {
-    name: 'dhiigkaal',
-    title: 'DHIIG KAAL – Blood Donation System',
-    domain: 'dhiigkaal.iftiinhub.com',
-    logo: 'https://dhiigkaal.iftiinhub.com/logo.jpg',
-    logoFallback: '🩸',
-    logoBg: 'from-red-500 to-red-700',
-    description: 'A blood donation platform connecting donors with patients. Tracks donations, manages donor records, blood inventory, and coordinates transfusions.',
-    tech: ['ReactJS', 'NodeJS', 'MongoDB', 'Tailwind', 'Express'],
-    live: 'https://dhiigkaal.iftiinhub.com',
-    category: 'Fullstack',
-  },
-  {
-    name: 'iftiinhub',
-    title: 'IftiinHub – Online Learning Platform',
-    domain: 'iftiinhub.com',
-    logo: 'https://iftiinhub.com/logo-transparent.png',
-    logoFallback: '📚',
-    logoBg: 'from-indigo-500 to-indigo-700',
-    description: 'A full-featured e-learning platform providing students and professionals access to quality online courses with progress tracking and interactive lessons.',
-    tech: ['ReactJS', 'NodeJS', 'MongoDB', 'Tailwind', 'Express'],
-    live: 'https://iftiinhub.com',
-    category: 'Fullstack',
-  },
-  {
-    name: 'ntw',
-    title: 'National Training Week – Hormuud University',
-    domain: 'ntw.hu.edu.so',
-    logo: 'https://ntw.hu.edu.so/favicon-light.png',
-    logoFallback: '🎓',
-    logoBg: 'from-teal-500 to-teal-700',
-    description: 'Intensive online technical training platform for Hormuud University — live sessions, verified certificates, attendance tracking and performance analytics.',
-    tech: ['ReactJS', 'NodeJS', 'PostgreSQL', 'Python', 'Charts'],
-    live: 'https://ntw.hu.edu.so',
-    category: 'Fullstack + Data',
-  },
-];
+import { getStoredProjects } from '../utils/projectsData';
 
 const TopLiveProjectCard = ({ project, idx }) => {
   const [imgErr, setImgErr] = useState(false);
+
+  const title = project.title || project.name || 'Untitled Project';
+  const name = project.name || project.title || 'Project';
+  const live = project.live || project.liveUrl || '#';
+  const domain = project.domain || (live !== '#' ? live.replace(/^https?:\/\//, '').replace(/\/.*$/, '') : '');
+  const logo = project.logo || project.imageUrl || '';
+  const logoFallback = project.logoFallback || '🚀';
+  const logoBg = project.logoBg || 'from-blue-600 to-purple-700';
+  const category = project.category || 'Fullstack';
+  const rawTech = project.tech || project.technologies || [];
+  const techList = Array.isArray(rawTech) ? rawTech : String(rawTech).split(',').map(s => s.trim()).filter(Boolean);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: idx * 0.12 }}
+      transition={{ duration: 0.6, delay: idx * 0.1 }}
       viewport={{ once: true }}
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-100 dark:border-gray-700 group"
     >
       {/* Logo Banner */}
-      <div className={`w-full h-40 bg-gradient-to-br ${project.logoBg} flex items-center justify-center relative`}>
-        {!imgErr ? (
+      <div className={`w-full h-40 bg-gradient-to-br ${logoBg} flex items-center justify-center relative`}>
+        {!imgErr && logo ? (
           <img
-            src={project.logo}
-            alt={project.title}
+            src={logo}
+            alt={title}
             onError={() => setImgErr(true)}
             className="w-24 h-24 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
-          <span className="text-5xl">{project.logoFallback}</span>
+          <span className="text-5xl">{logoFallback}</span>
         )}
 
         {/* Live Status Badge */}
@@ -98,10 +59,10 @@ const TopLiveProjectCard = ({ project, idx }) => {
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center justify-between gap-2 mb-1">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white capitalize">
-            {project.name}
+            {name}
           </h3>
           <span className="text-[11px] font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/40 px-2 py-0.5 rounded-full border border-purple-200 dark:border-purple-800">
-            {project.category}
+            {category}
           </span>
         </div>
 
@@ -111,7 +72,7 @@ const TopLiveProjectCard = ({ project, idx }) => {
 
         {/* Tech Badges */}
         <div className="flex flex-wrap gap-1.5 mb-5">
-          {project.tech.map((t) => (
+          {techList.map((t) => (
             <span
               key={t}
               className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold border border-gray-200 dark:border-gray-700 rounded-full text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/60"
@@ -124,24 +85,32 @@ const TopLiveProjectCard = ({ project, idx }) => {
 
         {/* Direct Link & Live Demo Button */}
         <div className="pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-2">
-          <a
-            href={project.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-[130px] font-mono"
-            title={project.domain}
-          >
-            {project.domain}
-          </a>
-          <a
-            href={project.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
-          >
-            <FaExternalLinkAlt className="w-2.5 h-2.5" />
-            Live Demo
-          </a>
+          {domain ? (
+            <a
+              href={live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 truncate max-w-[130px] font-mono"
+              title={domain}
+            >
+              {domain}
+            </a>
+          ) : (
+            <span className="text-xs text-gray-400">Deployed App</span>
+          )}
+          {live && live !== '#' ? (
+            <a
+              href={live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+            >
+              <FaExternalLinkAlt className="w-2.5 h-2.5" />
+              Live Demo
+            </a>
+          ) : (
+            <span className="text-xs font-semibold text-gray-400">Internal</span>
+          )}
         </div>
       </div>
     </motion.div>
@@ -149,6 +118,20 @@ const TopLiveProjectCard = ({ project, idx }) => {
 };
 
 const Home = () => {
+  const [projectsList, setProjectsList] = useState(getStoredProjects());
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setProjectsList(getStoredProjects());
+    };
+    window.addEventListener('portfolio_projects_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    return () => {
+      window.removeEventListener('portfolio_projects_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
   const features = [
     {
       icon: FaCode,
@@ -252,23 +235,27 @@ const Home = () => {
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                   </span>
                   <span className="text-xs uppercase tracking-wider font-bold text-gray-600 dark:text-gray-300">
-                    Top Live Systems (Online)
+                    Live Systems ({projectsList.length} Online)
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {TOP_LIVE_PROJECTS.map((proj) => (
-                    <a
-                      key={proj.name}
-                      href={proj.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm group"
-                    >
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                      <span>{proj.name}</span>
-                      <FaExternalLinkAlt className="w-2.5 h-2.5 opacity-50 group-hover:opacity-100" />
-                    </a>
-                  ))}
+                  {projectsList.slice(0, 6).map((proj) => {
+                    const live = proj.live || proj.liveUrl || '#';
+                    const name = proj.name || proj.title;
+                    return (
+                      <a
+                        key={proj.id || name}
+                        href={live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm group"
+                      >
+                        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        <span>{name}</span>
+                        <FaExternalLinkAlt className="w-2.5 h-2.5 opacity-50 group-hover:opacity-100" />
+                      </a>
+                    );
+                  })}
                 </div>
               </motion.div>
             </motion.div>
@@ -296,7 +283,7 @@ const Home = () => {
                   </div>
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-                    4 Live Systems
+                    {projectsList.length} Active Systems
                   </span>
                 </div>
 
@@ -321,7 +308,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── 2. Top Live Projects Section (Placed Right at the Top!) ── */}
+      {/* ── 2. Top Live Projects Section (Dynamic!) ── */}
       <section id="live-projects" className="py-20 bg-gray-50 dark:bg-gray-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -355,8 +342,8 @@ const Home = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TOP_LIVE_PROJECTS.map((project, idx) => (
-              <TopLiveProjectCard key={project.name} project={project} idx={idx} />
+            {projectsList.map((project, idx) => (
+              <TopLiveProjectCard key={project.id || project.name || idx} project={project} idx={idx} />
             ))}
           </div>
         </div>

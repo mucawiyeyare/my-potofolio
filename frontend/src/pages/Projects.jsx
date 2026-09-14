@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaExternalLinkAlt, FaGlobe, FaCode, FaDatabase, FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaChartBar, FaPython } from "react-icons/fa";
 import { SiMongodb, SiJavascript, SiTailwindcss, SiExpress, SiMysql, SiPostgresql } from "react-icons/si";
 import { HiLightningBolt } from "react-icons/hi";
+import { getStoredProjects } from "../utils/projectsData";
 
 /* ─── SKILLS ─────────────────────────────────────────── */
 const skillCategories = [
@@ -36,74 +37,29 @@ const skillCategories = [
   },
 ];
 
-/* ─── PROJECTS ────────────────────────────────────────── */
-const projects = [
-  {
-    name: "snabdental",
-    title: "SNAB Dental & Dermatologic Clinic",
-    domain: "snabdental.iftiinhub.com",
-    logo: "https://snabdental.iftiinhub.com/logo.png",
-    logoFallback: "🦷",
-    logoBg: "from-blue-600 to-blue-800",
-    description:
-      "A modern and powerful dental management system designed to help dental clinics securely store, manage, and organize patient data. It provides an efficient way for dentists and clinic staff to access patient records, treatment histories, appointments, and other important information in one centralized system.",
-    tech: ["HTML", "CSS", "JS", "ReactJS", "NodeJS", "MongoDB"],
-    live: "https://snabdental.iftiinhub.com",
-    category: "Fullstack",
-  },
-  {
-    name: "dhiigkaal",
-    title: "DHIIG KAAL – Blood Donation System",
-    domain: "dhiigkaal.iftiinhub.com",
-    logo: "https://dhiigkaal.iftiinhub.com/logo.jpg",
-    logoFallback: "🩸",
-    logoBg: "from-red-500 to-red-700",
-    description:
-      "A comprehensive blood donation management system that connects donors with patients in need. It enables clinics and blood banks to track donations, manage donor records, blood inventory, and coordinate life-saving transfusions efficiently.",
-    tech: ["ReactJS", "NodeJS", "MongoDB", "Tailwind CSS", "Express"],
-    live: "https://dhiigkaal.iftiinhub.com",
-    category: "Fullstack",
-  },
-  {
-    name: "iftiinhub",
-    title: "IftiinHub – Online Learning Platform",
-    domain: "iftiinhub.com",
-    logo: "https://iftiinhub.com/logo-transparent.png",
-    logoFallback: "📚",
-    logoBg: "from-indigo-500 to-indigo-700",
-    description:
-      "A full-featured e-learning platform that provides students and professionals with access to quality online courses, interactive lessons, and progress tracking. IftiinHub empowers learners to grow their skills at their own pace with a clean and intuitive interface.",
-    tech: ["ReactJS", "NodeJS", "MongoDB", "Tailwind CSS", "Express"],
-    live: "https://iftiinhub.com",
-    category: "Fullstack",
-  },
-  {
-    name: "ntw",
-    title: "National Training Week – Hormuud University",
-    domain: "ntw.hu.edu.so",
-    logo: "https://ntw.hu.edu.so/favicon-light.png",
-    logoFallback: "🎓",
-    logoBg: "from-teal-500 to-teal-700",
-    description:
-      "Intensive online technical training platform for Hormuud University — live sessions, verified certificates, attendance tracking and performance analytics.",
-    tech: ["ReactJS", "NodeJS", "PostgreSQL", "Tailwind CSS", "Python", "Charts"],
-    live: "https://ntw.hu.edu.so",
-    category: "Fullstack + Data",
-  },
-];
-
 /* ─── CARD ────────────────────────────────────────────── */
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 0.5, ease: "easeOut" },
+    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
   }),
 };
 
 const ProjectCard = ({ project, index }) => {
   const [imgError, setImgError] = useState(false);
+
+  const title = project.title || project.name || "Untitled Project";
+  const name = project.name || project.title || "Project";
+  const live = project.live || project.liveUrl || "#";
+  const domain = project.domain || (live !== "#" ? live.replace(/^https?:\/\//, "").replace(/\/.*$/, "") : "");
+  const logo = project.logo || project.imageUrl || "";
+  const logoFallback = project.logoFallback || "🚀";
+  const logoBg = project.logoBg || "from-blue-600 to-purple-700";
+  const category = project.category || "Fullstack";
+  const rawTech = project.tech || project.technologies || [];
+  const techList = Array.isArray(rawTech) ? rawTech : String(rawTech).split(",").map(s => s.trim()).filter(Boolean);
 
   return (
     <motion.div
@@ -114,16 +70,16 @@ const ProjectCard = ({ project, index }) => {
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-100 dark:border-gray-700 group"
     >
       {/* Logo banner */}
-      <div className={`w-full h-44 bg-gradient-to-br ${project.logoBg} flex items-center justify-center relative`}>
-        {!imgError ? (
+      <div className={`w-full h-44 bg-gradient-to-br ${logoBg} flex items-center justify-center relative`}>
+        {!imgError && logo ? (
           <img
-            src={project.logo}
-            alt={project.title}
+            src={logo}
+            alt={title}
             onError={() => setImgError(true)}
             className="w-28 h-28 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
-          <span className="text-6xl">{project.logoFallback}</span>
+          <span className="text-6xl">{logoFallback}</span>
         )}
 
         {/* Live Status Badge */}
@@ -145,10 +101,10 @@ const ProjectCard = ({ project, index }) => {
       <div className="p-6 flex flex-col flex-1">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white capitalize">
-            {project.name}
+            {name}
           </h2>
           <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/40 px-2.5 py-1 rounded-full border border-purple-200 dark:border-purple-800">
-            {project.category}
+            {category}
           </span>
         </div>
 
@@ -158,7 +114,7 @@ const ProjectCard = ({ project, index }) => {
 
         {/* Tech badges */}
         <div className="flex flex-wrap gap-2 mb-5">
-          {project.tech.map((t) => (
+          {techList.map((t) => (
             <span
               key={t}
               className="flex items-center gap-1 px-3 py-1 text-xs font-semibold border border-gray-200 dark:border-gray-700 rounded-full text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/60"
@@ -171,24 +127,32 @@ const ProjectCard = ({ project, index }) => {
 
         {/* Domain and Live Demo Button */}
         <div className="pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-3">
-          <a
-            href={project.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-mono text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 truncate"
-            title={project.domain}
-          >
-            {project.domain}
-          </a>
-          <a
-            href={project.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
-          >
-            <FaExternalLinkAlt className="w-3.5 h-3.5" />
-            Live Demo
-          </a>
+          {domain ? (
+            <a
+              href={live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-mono text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 truncate"
+              title={domain}
+            >
+              {domain}
+            </a>
+          ) : (
+            <span className="text-xs text-gray-400 font-mono">Production App</span>
+          )}
+          {live && live !== "#" ? (
+            <a
+              href={live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+            >
+              <FaExternalLinkAlt className="w-3.5 h-3.5" />
+              Live Demo
+            </a>
+          ) : (
+            <span className="text-xs text-gray-400">Published</span>
+          )}
         </div>
       </div>
     </motion.div>
@@ -197,6 +161,18 @@ const ProjectCard = ({ project, index }) => {
 
 /* ─── PAGE ────────────────────────────────────────────── */
 const Projects = () => {
+  const [projectsList, setProjectsList] = useState(getStoredProjects());
+
+  useEffect(() => {
+    const handleUpdate = () => setProjectsList(getStoredProjects());
+    window.addEventListener("portfolio_projects_updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener("portfolio_projects_updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       {/* ── Header ── */}
@@ -234,16 +210,16 @@ const Projects = () => {
           className="flex items-center justify-between mb-8"
         >
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <span>🚀</span> Top Live Systems
+            <span>🚀</span> Published Systems ({projectsList.length})
           </h2>
           <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
-            4 Production Apps Online
+            {projectsList.length} Production Apps Online
           </span>
         </motion.div>
         
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 mb-20">
-          {projects.map((project, i) => (
-            <ProjectCard key={project.name} project={project} index={i} />
+          {projectsList.map((project, i) => (
+            <ProjectCard key={project.id || project.name || i} project={project} index={i} />
           ))}
         </div>
 
