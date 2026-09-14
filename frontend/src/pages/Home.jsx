@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaArrowRight, FaCode, FaRocket, FaPalette, FaExternalLinkAlt, FaGlobe } from 'react-icons/fa';
@@ -28,35 +28,35 @@ const TopLiveProjectCard = ({ project, idx }) => {
       className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-100 dark:border-gray-700 group"
     >
       {/* Logo Banner */}
-      <div className={`w-full h-40 bg-gradient-to-br ${logoBg} flex items-center justify-center relative`}>
+      <div className={`w-full h-36 sm:h-40 bg-gradient-to-br ${logoBg} flex items-center justify-center relative`}>
         {!imgErr && logo ? (
           <img
             src={logo}
             alt={title}
             onError={() => setImgErr(true)}
-            className="w-24 h-24 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-300"
+            className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
-          <span className="text-5xl">{logoFallback}</span>
+          <span className="text-4xl sm:text-5xl">{logoFallback}</span>
         )}
 
         {/* Live Status Badge */}
-        <div className="absolute top-3 right-3 bg-gray-900/80 backdrop-blur-sm border border-emerald-500/40 rounded-full px-2.5 py-1 flex items-center gap-1.5 shadow">
+        <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 bg-gray-900/80 backdrop-blur-sm border border-emerald-500/40 rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 flex items-center gap-1.5 shadow">
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span className="text-[10px] font-bold tracking-wider text-emerald-400 uppercase">Live</span>
+          <span className="text-[9px] sm:text-[10px] font-bold tracking-wider text-emerald-400 uppercase">Live</span>
         </div>
 
         {/* Globe icon badge */}
-        <div className="absolute bottom-3 left-3 bg-white dark:bg-gray-900 rounded-full p-1.5 shadow">
-          <FaGlobe className="w-3.5 h-3.5 text-blue-500" />
+        <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 bg-white dark:bg-gray-900 rounded-full p-1.5 shadow">
+          <FaGlobe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-500" />
         </div>
       </div>
 
       {/* Body */}
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-4 sm:p-5 flex flex-col flex-1">
         <div className="flex items-center justify-between gap-2 mb-1">
           <h3 className="text-lg font-bold text-gray-900 dark:text-white capitalize">
             {name}
@@ -157,21 +157,21 @@ const Home = () => {
     <div className="min-h-screen">
       {/* ── 1. Hero Section ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Text Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight break-words"
                 >
                   Hi, I'm{' '}
                   <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -183,7 +183,7 @@ const Home = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300"
+                  className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-700 dark:text-gray-300"
                 >
                   Full-Stack Developer &amp; Data Analyst
                 </motion.p>
@@ -192,7 +192,7 @@ const Home = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl"
+                  className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed"
                 >
                   I create exceptional digital experiences through clean code, 
                   innovative solutions, and user-centered design. Check out my live production systems below.
@@ -204,11 +204,11 @@ const Home = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-4"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2"
               >
                 <Link
                   to="/projects"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  className="inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm sm:text-base font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
                 >
                   View Top Live Projects
                   <FaArrowRight className="ml-2" />
@@ -216,7 +216,7 @@ const Home = () => {
                 
                 <Link
                   to="/contact"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:border-blue-600 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-all duration-200"
+                  className="inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold rounded-xl hover:border-blue-600 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-all duration-200"
                 >
                   Get In Touch
                 </Link>
@@ -227,7 +227,7 @@ const Home = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1 }}
-                className="pt-6 border-t border-gray-200 dark:border-gray-800"
+                className="pt-5 border-t border-gray-200 dark:border-gray-800"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <span className="flex h-2.5 w-2.5 relative">
@@ -238,7 +238,7 @@ const Home = () => {
                     Live Systems ({projectsList.length} Online)
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {projectsList.slice(0, 6).map((proj) => {
                     const live = proj.live || proj.liveUrl || '#';
                     const name = proj.name || proj.title;
@@ -248,10 +248,10 @@ const Home = () => {
                         href={live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm group"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all shadow-sm group"
                       >
                         <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>{name}</span>
+                        <span className="truncate max-w-[120px] sm:max-w-none">{name}</span>
                         <FaExternalLinkAlt className="w-2.5 h-2.5 opacity-50 group-hover:opacity-100" />
                       </a>
                     );
@@ -265,9 +265,9 @@ const Home = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="relative"
+              className="relative w-full max-w-md mx-auto lg:max-w-none mt-4 lg:mt-0"
             >
-              <div className="relative w-full h-96 lg:h-[500px] rounded-2xl shadow-2xl overflow-hidden group">
+              <div className="relative w-full h-80 sm:h-96 lg:h-[480px] rounded-2xl shadow-2xl overflow-hidden group">
                 <img
                   src="/profile.jpg"
                   alt="Eng Abdirahman Mohamed Ibrahim"
@@ -276,14 +276,14 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-900/20 to-transparent"></div>
                 
                 {/* Floating Overlay Badge */}
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-between shadow-xl">
-                  <div>
-                    <p className="text-xs uppercase tracking-wider text-blue-300 font-semibold">Full-Stack &amp; Data Analyst</p>
-                    <p className="text-base font-bold">Eng Abdirahman Mohamed</p>
+                <div className="absolute bottom-3 left-3 right-3 sm:bottom-5 sm:left-5 sm:right-5 p-3 sm:p-4 rounded-xl bg-white/10 dark:bg-gray-900/60 backdrop-blur-md border border-white/20 text-white flex items-center justify-between shadow-xl gap-2">
+                  <div className="min-w-0 pr-2">
+                    <p className="text-[10px] sm:text-xs uppercase tracking-wider text-blue-300 font-semibold truncate">Full-Stack &amp; Data Analyst</p>
+                    <p className="text-xs sm:text-base font-bold truncate">Eng Abdirahman Mohamed</p>
                   </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>
-                    {projectsList.length} Active Systems
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex-shrink-0">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+                    {projectsList.length} Systems
                   </span>
                 </div>
 
@@ -291,14 +291,14 @@ const Home = () => {
                 <motion.div
                   animate={{ y: [-10, 10, -10] }}
                   transition={{ duration: 3, repeat: Infinity }}
-                  className="absolute top-6 left-6 w-14 h-14 bg-white/10 rounded-xl backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-xl shadow-lg"
+                  className="absolute top-4 left-4 sm:top-6 sm:left-6 w-11 h-11 sm:w-14 sm:h-14 bg-white/10 rounded-xl backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-base sm:text-xl shadow-lg"
                 >
                   💻
                 </motion.div>
                 <motion.div
                   animate={{ y: [10, -10, 10] }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute top-6 right-6 w-12 h-12 bg-white/10 rounded-full backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-lg shadow-lg"
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 sm:w-12 sm:h-12 bg-white/10 rounded-full backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-sm sm:text-lg shadow-lg"
                 >
                   🚀
                 </motion.div>
@@ -309,14 +309,14 @@ const Home = () => {
       </section>
 
       {/* ── 2. Top Live Projects Section (Dynamic!) ── */}
-      <section id="live-projects" className="py-20 bg-gray-50 dark:bg-gray-800/50">
+      <section id="live-projects" className="py-12 sm:py-20 bg-gray-50 dark:bg-gray-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="flex flex-col md:flex-row md:items-end justify-between mb-12"
+            className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4"
           >
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold mb-3 border border-emerald-200 dark:border-emerald-800">
@@ -326,22 +326,22 @@ const Home = () => {
                 </span>
                 ACTIVELY RUNNING PRODUCTION SYSTEMS
               </div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">
                 Top Live Projects
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-xl">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-xl">
                 Explore real-world deployed platforms built for healthcare, community, education, and university training.
               </p>
             </div>
             <Link
               to="/projects"
-              className="inline-flex items-center text-blue-600 dark:text-blue-400 font-semibold hover:underline mt-4 md:mt-0"
+              className="inline-flex items-center text-blue-600 dark:text-blue-400 font-semibold hover:underline text-sm sm:text-base"
             >
               View All in Projects Page <FaArrowRight className="ml-2 text-sm" />
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {projectsList.map((project, idx) => (
               <TopLiveProjectCard key={project.id || project.name || idx} project={project} idx={idx} />
             ))}

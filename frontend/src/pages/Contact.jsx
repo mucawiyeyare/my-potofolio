@@ -83,19 +83,19 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen py-20">
+    <div className="min-h-screen py-10 sm:py-16 lg:py-20">
       {/* Header */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 sm:mb-16">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
             Get In Touch
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Have a project in mind or just want to chat? I'd love to hear from you. 
             Send me a message and I'll respond as soon as possible.
           </p>
@@ -103,15 +103,15 @@ const Contact = () => {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg"
+            className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
           >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
               Send Message
             </h2>
             
@@ -250,39 +250,39 @@ const Contact = () => {
             className="space-y-8"
           >
             {/* Contact Details */}
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            <div className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
                 Contact Information
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-5 sm:space-y-6">
                 {contactInfo.map((info, index) => (
                   <div key={index} className="flex items-center">
-                    <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                      <info.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 dark:bg-blue-900/50 rounded-xl flex items-center justify-center">
+                      <info.icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <div className="ml-3 sm:ml-4 min-w-0 flex-1">
+                      <h3 className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">
                         {info.title}
                       </h3>
                       {info.link ? (
                         <div className="flex flex-col">
                           <a
                             href={info.link}
-                            className="text-base sm:text-lg font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                            className="text-sm sm:text-base font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 truncate"
                           >
                             {info.value}
                           </a>
                           {info.secondaryValue && (
                             <a
                               href={`mailto:${info.secondaryValue}`}
-                              className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                              className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 truncate"
                             >
                               {info.secondaryValue}
                             </a>
                           )}
                         </div>
                       ) : (
-                        <p className="text-lg font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
                           {info.value}
                         </p>
                       )}
@@ -293,8 +293,8 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            <div className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
                 Follow Me
               </h2>
               <div className="flex space-x-4">

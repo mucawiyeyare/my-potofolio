@@ -47,17 +47,18 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group min-w-0 max-w-[68%] sm:max-w-none">
             <img
               src="/profile.jpg"
               alt="Eng. Abdirahman"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-500 shadow-sm group-hover:scale-105 transition-transform duration-200"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-500 shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-200"
             />
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate"
+              className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate"
             >
-              Eng.Abdirahman Mohamed Ibrahim
+              <span className="hidden sm:inline text-lg sm:text-xl">Eng.Abdirahman Mohamed Ibrahim</span>
+              <span className="sm:hidden text-sm font-bold truncate">Eng. Abdirahman</span>
             </motion.div>
           </Link>
 
