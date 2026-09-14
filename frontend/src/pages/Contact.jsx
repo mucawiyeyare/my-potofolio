@@ -65,10 +65,14 @@ const Contact = () => {
       }
     } catch (error) {
       console.error('Contact form error:', error);
-      if (error.response?.data?.errors) {
+      if (error.response?.data?.errors?.length) {
         error.response.data.errors.forEach(err => {
           toast.error(err.msg);
         });
+      } else if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else if (error.code === 'ECONNABORTED') {
+        toast.error('Request timed out. Please try again.');
       } else {
         toast.error('Failed to send message. Please try again later.');
       }
@@ -173,7 +177,7 @@ const Contact = () => {
                   id="subject"
                   {...register('subject', { 
                     required: 'Subject is required',
-                    minLength: { value: 5, message: 'Subject must be at least 5 characters' },
+                    minLength: { value: 2, message: 'Subject must be at least 2 characters' },
                     maxLength: { value: 200, message: 'Subject cannot exceed 200 characters' }
                   })}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 ${
@@ -198,7 +202,7 @@ const Contact = () => {
                   rows={6}
                   {...register('message', { 
                     required: 'Message is required',
-                    minLength: { value: 10, message: 'Message must be at least 10 characters' },
+                    minLength: { value: 2, message: 'Message must be at least 2 characters' },
                     maxLength: { value: 1000, message: 'Message cannot exceed 1000 characters' }
                   })}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 resize-none ${

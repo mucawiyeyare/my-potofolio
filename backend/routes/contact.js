@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import { body, validationResult } from 'express-validator';
 import nodemailer from 'nodemailer';
 import Contact from '../models/Contact.js';
@@ -8,8 +8,8 @@ const router = express.Router();
 // Email transporter configuration
 const createTransporter = () => {
   return nodemailer.createTransporter({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT, 10) || 587,
     secure: false,
     auth: {
       user: process.env.EMAIL_USER,
@@ -18,24 +18,24 @@ const createTransporter = () => {
   });
 };
 
-// Validation rules
+// Validation rules (flexible so legitimate short messages work)
 const contactValidation = [
   body('name')
     .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Name must be between 2 and 100 characters'),
+    .isLength({ min: 1, max: 100 })
+    .withMessage('Name must be between 1 and 100 characters'),
   body('email')
     .isEmail()
     .normalizeEmail()
     .withMessage('Please enter a valid email address'),
   body('subject')
     .trim()
-    .isLength({ min: 5, max: 200 })
-    .withMessage('Subject must be between 5 and 200 characters'),
+    .isLength({ min: 2, max: 200 })
+    .withMessage('Subject must be between 2 and 200 characters'),
   body('message')
     .trim()
-    .isLength({ min: 10, max: 1000 })
-    .withMessage('Message must be between 10 and 1000 characters')
+    .isLength({ min: 2, max: 2000 })
+    .withMessage('Message must be between 2 and 2000 characters')
 ];
 
 // POST /api/contact - Submit contact form
@@ -46,7 +46,7 @@ router.post('/', contactValidation, async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Validation failed',
+        message: errors.array()[0]?.msg || 'Validation failed',
         errors: errors.array()
       });
     }
@@ -63,35 +63,38 @@ router.post('/', contactValidation, async (req, res) => {
 
     await contact.save();
 
-    // Send email notification
-    try {
-      const transporter = createTransporter();
-      
-      const mailOptions = {
-        from: process.env.EMAIL_FROM,
-        to: process.env.EMAIL_TO,
-        subject: `New Contact Form Submission: ${subject}`,
-        html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Subject:</strong> ${subject}</p>
-          <p><strong>Message:</strong></p>
-          <p>${message.replace(/\n/g, '<br>')}</p>
-          <hr>
-          <p><small>Submitted at: ${new Date().toLocaleString()}</small></p>
-        `
-      };
+    // Send email notification in background (non-blocking)
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.EMAIL_PASS.trim() !== '') {
+      try {
+        const transporter = createTransporter();
+        const mailOptions = {
+          from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+          to: process.env.EMAIL_TO || process.env.EMAIL_USER,
+          subject: `New Contact Form: ${subject}`,
+          html: `
+            <h2>New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Message:</strong></p>
+            <p>${message.replace(/\n/g, '<br>')}</p>
+            <hr>
+            <p><small>Submitted at: ${new Date().toLocaleString()}</small></p>
+          `
+        };
 
-      await transporter.sendMail(mailOptions);
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
-      // Don't fail the request if email fails
+        transporter.sendMail(mailOptions).catch(emailError => {
+          console.error('Background email sending failed:', emailError.message);
+        });
+      } catch (transporterErr) {
+        console.warn('Transporter creation failed:', transporterErr.message);
+      }
     }
 
-    res.status(201).json({
+    // Return instant success to the client
+    return res.status(201).json({
       success: true,
-      message: 'Thank you for your message! I\'ll get back to you soon.',
+      message: 'Thank you for your message! I will get back to you soon.',
       data: {
         id: contact._id,
         createdAt: contact.createdAt
@@ -100,9 +103,9 @@ router.post('/', contactValidation, async (req, res) => {
 
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: 'Failed to submit contact form. Please try again later.'
+      message: 'Failed to submit contact form: ' + (error.message || 'Internal server error')
     });
   }
 });
@@ -123,7 +126,32 @@ router.get('/', async (req, res) => {
     console.error('Get contacts error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch contact messages'
+      message: 'Failed to retrieve contact messages'
+    });
+  }
+});
+
+// GET /api/contact/:id - Get specific contact message
+router.get('/:id', async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.id).select('-__v');
+    
+    if (!contact) {
+      return res.status(404).json({
+        success: false,
+        message: 'Contact message not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: contact
+    });
+  } catch (error) {
+    console.error('Get contact error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to retrieve contact message'
     });
   }
 });
@@ -131,54 +159,54 @@ router.get('/', async (req, res) => {
 // PATCH /api/contact/:id/read - Mark message as read
 router.patch('/:id/read', async (req, res) => {
   try {
-    const message = await Contact.findByIdAndUpdate(
+    const contact = await Contact.findByIdAndUpdate(
       req.params.id,
-      { read: true },
+      { status: 'read' },
       { new: true }
-    );
+    ).select('-__v');
 
-    if (!message) {
+    if (!contact) {
       return res.status(404).json({
         success: false,
-        message: 'Message not found'
+        message: 'Contact message not found'
       });
     }
 
     res.json({
       success: true,
       message: 'Message marked as read',
-      data: message
+      data: contact
     });
   } catch (error) {
-    console.error('Error marking message as read:', error);
+    console.error('Mark read error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Failed to update message status'
     });
   }
 });
 
-// DELETE /api/contact/:id - Delete a message
+// DELETE /api/contact/:id - Delete contact message
 router.delete('/:id', async (req, res) => {
   try {
-    const message = await Contact.findByIdAndDelete(req.params.id);
+    const contact = await Contact.findByIdAndDelete(req.params.id);
 
-    if (!message) {
+    if (!contact) {
       return res.status(404).json({
         success: false,
-        message: 'Message not found'
+        message: 'Contact message not found'
       });
     }
 
     res.json({
       success: true,
-      message: 'Message deleted successfully'
+      message: 'Contact message deleted successfully'
     });
   } catch (error) {
-    console.error('Error deleting message:', error);
+    console.error('Delete contact error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Failed to delete contact message'
     });
   }
 });

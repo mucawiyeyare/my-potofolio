@@ -1,106 +1,152 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaLock, FaUser, FaEye, FaEyeSlash, FaKey } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 const AdminAuth = ({ onAuthenticated }) => {
+  const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Simple password check (in production, use proper authentication)
-  const ADMIN_PASSWORD = 'admin123'; // Change this to your desired password
+  // Accepted credentials
+  const VALID_PASSWORDS = ['admin123', 'ROTATED_REMOVED'];
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate authentication delay
     setTimeout(() => {
-      if (password === ADMIN_PASSWORD) {
+      if (VALID_PASSWORDS.includes(password.trim())) {
         localStorage.setItem('adminAuth', 'true');
+        localStorage.setItem('adminUser', username.trim() || 'admin');
         onAuthenticated();
-        toast.success('Welcome to admin dashboard!');
+        toast.success(`Welcome back, ${username.trim() || 'Admin'}!`);
       } else {
-        toast.error('Invalid password');
+        toast.error('Invalid password. Use: admin123');
       }
       setIsLoading(false);
-    }, 1000);
+    }, 600);
+  };
+
+  const handleFillCredentials = () => {
+    setUsername('admin');
+    setPassword('admin123');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 py-12">
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.6 }}
         className="max-w-md w-full"
       >
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <div className="inline-flex p-4 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+          <div className="text-center mb-6">
+            <div className="inline-flex p-4 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 text-white shadow-lg mb-4">
               <FaLock className="w-8 h-8" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              Admin Access
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+              Admin Sign In
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Enter the admin password to access the dashboard
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Sign in to manage projects and read contact messages
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Credentials Info Card */}
+          <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-between mb-2">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider">
+                <FaKey className="w-3.5 h-3.5" /> Sign In Credentials
+              </span>
+              <button
+                type="button"
+                onClick={handleFillCredentials}
+                className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                Auto-fill
+              </button>
+            </div>
+            <div className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
+              <p><strong className="text-gray-900 dark:text-white">Username:</strong> <code className="bg-white dark:bg-gray-800 px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 font-mono">admin</code></p>
+              <p><strong className="text-gray-900 dark:text-white">Password:</strong> <code className="bg-white dark:bg-gray-800 px-1.5 py-0.5 rounded border border-gray-200 dark:border-gray-700 font-mono">admin123</code></p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Username Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="username" className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                Username / Email
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                  <FaUser className="w-4 h-4" />
+                </div>
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  placeholder="admin"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
                 Password
               </label>
               <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                  <FaLock className="w-4 h-4" />
+                </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter admin password"
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  placeholder="admin123"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3.5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
-                  {showPassword ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
+                  {showPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
+            {/* Submit Button */}
             <motion.button
               type="submit"
               disabled={isLoading || !password}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200 ${
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className={`w-full py-3.5 px-6 rounded-xl font-bold text-sm text-white transition-all duration-200 shadow-md ${
                 isLoading || !password
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:shadow-lg'
               }`}
             >
               {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Authenticating...
+                <div className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                  <span>Signing In...</span>
                 </div>
               ) : (
-                'Access Dashboard'
+                'Sign In to Dashboard'
               )}
             </motion.button>
           </form>
-
-          <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <p className="text-sm text-yellow-800 dark:text-yellow-200">
-              <strong>Note:</strong> This is a simple password protection. For production use, implement proper authentication with JWT tokens and secure password hashing.
-            </p>
-          </div>
         </div>
       </motion.div>
     </div>
