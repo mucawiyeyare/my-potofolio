@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  FaGithub, FaExternalLinkAlt, FaCode, FaServer, FaDatabase,
-  FaMobile, FaGitAlt, FaCheckCircle, FaTimes, FaLayerGroup
-} from 'react-icons/fa';
-import { SiReact, SiNodedotjs, SiMongodb, SiJavascript, SiPython, SiTailwindcss, SiExpress } from 'react-icons/si';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('projects');
@@ -12,25 +7,25 @@ const Profile = () => {
 
   const skills = {
     frontend: [
-      { name: 'React', icon: SiReact, level: 92, color: 'text-blue-500' },
-      { name: 'JavaScript (ES6+)', icon: SiJavascript, level: 95, color: 'text-yellow-500' },
-      { name: 'Tailwind CSS', icon: SiTailwindcss, level: 90, color: 'text-cyan-500' },
-      { name: 'HTML5 / CSS3', icon: FaCode, level: 95, color: 'text-orange-500' }
+      { name: 'React', level: 92 },
+      { name: 'JavaScript (ES6+)', level: 95 },
+      { name: 'Tailwind CSS', level: 90 },
+      { name: 'HTML5 / CSS3', level: 95 }
     ],
     backend: [
-      { name: 'Node.js', icon: SiNodedotjs, level: 88, color: 'text-green-500' },
-      { name: 'Express.js', icon: SiExpress, level: 88, color: 'text-gray-600' },
-      { name: 'Python / PHP', icon: SiPython, level: 80, color: 'text-blue-600' },
-      { name: 'RESTful APIs', icon: FaCode, level: 92, color: 'text-purple-500' }
+      { name: 'Node.js', level: 88 },
+      { name: 'Express.js', level: 88 },
+      { name: 'Python / PHP', level: 80 },
+      { name: 'RESTful APIs', level: 92 }
     ],
     database: [
-      { name: 'MongoDB', icon: SiMongodb, level: 88, color: 'text-green-600' },
-      { name: 'Oracle Database', icon: FaDatabase, level: 78, color: 'text-red-600' },
-      { name: 'MySQL', icon: FaDatabase, level: 82, color: 'text-blue-600' }
+      { name: 'MongoDB', level: 88 },
+      { name: 'Oracle Database', level: 78 },
+      { name: 'MySQL', level: 82 }
     ],
     tools: [
-      { name: 'Git', icon: FaGitAlt, level: 90, color: 'text-orange-600' },
-      { name: 'GitHub', icon: FaGithub, level: 92, color: 'text-gray-800' }
+      { name: 'Git', level: 90 },
+      { name: 'GitHub', level: 92 }
     ]
   };
 
@@ -50,8 +45,6 @@ const Profile = () => {
       githubUrl: 'https://github.com/mucawiyeyare',
       liveUrl: 'https://github.com/mucawiyeyare',
       featured: true,
-      emoji: '🩸',
-      gradient: 'from-red-600 via-rose-600 to-pink-700'
     },
     {
       id: 2,
@@ -68,8 +61,6 @@ const Profile = () => {
       githubUrl: 'https://github.com/mucawiyeyare',
       liveUrl: 'https://github.com/mucawiyeyare',
       featured: true,
-      emoji: '🏨',
-      gradient: 'from-amber-500 via-orange-600 to-red-600'
     },
     {
       id: 3,
@@ -86,8 +77,6 @@ const Profile = () => {
       githubUrl: 'https://github.com/mucawiyeyare',
       liveUrl: 'https://github.com/mucawiyeyare',
       featured: true,
-      emoji: '🏫',
-      gradient: 'from-indigo-600 via-blue-600 to-cyan-600'
     },
     {
       id: 4,
@@ -104,8 +93,6 @@ const Profile = () => {
       githubUrl: 'https://github.com/mucawiyeyare',
       liveUrl: 'https://github.com/mucawiyeyare',
       featured: false,
-      emoji: '🎓',
-      gradient: 'from-blue-600 via-teal-600 to-emerald-600'
     },
     {
       id: 5,
@@ -122,29 +109,22 @@ const Profile = () => {
       githubUrl: 'https://github.com/mucawiyeyare',
       liveUrl: 'https://github.com/mucawiyeyare',
       featured: false,
-      emoji: '✍️',
-      gradient: 'from-purple-600 via-violet-600 to-indigo-700'
     }
   ];
 
   const tabs = [
-    { id: 'projects', label: 'Projects & Portfolio', icon: FaLayerGroup },
-    { id: 'skills', label: 'Technical Skills', icon: FaCode }
+    { id: 'projects', label: 'Projects & Portfolio' },
+    { id: 'skills', label: 'Technical Skills' }
   ];
 
   return (
     <div className="min-h-screen py-20">
       {/* Top Banner for GitHub */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <div className="bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10">
-          <div className="flex items-center space-x-4">
-            <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md text-3xl">
-              <FaGithub />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold">Explore My GitHub Repositories</h2>
-              <p className="text-sm text-gray-300">View source code, commits, and open-source contributions by Eng Abdirahman</p>
-            </div>
+        <div className="bg-gray-900 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10">
+          <div>
+            <h2 className="text-xl font-bold">Explore My GitHub Repositories</h2>
+            <p className="text-sm text-gray-300">View source code, commits, and open-source contributions by Eng Abdirahman</p>
           </div>
           <a
             href="https://github.com/mucawiyeyare"
@@ -152,9 +132,7 @@ const Profile = () => {
             rel="noopener noreferrer"
             className="inline-flex items-center px-6 py-3 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-md hover:scale-105 shrink-0"
           >
-            <FaGithub className="w-5 h-5 mr-2" />
             Visit github.com/mucawiyeyare
-            <FaExternalLinkAlt className="w-3.5 h-3.5 ml-2 text-gray-500" />
           </a>
         </div>
       </section>
@@ -186,11 +164,10 @@ const Profile = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-md'
+                    ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-md'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                 }`}
               >
-                <tab.icon className="w-5 h-5 mr-2" />
                 {tab.label}
               </button>
             ))}
@@ -213,25 +190,22 @@ const Profile = () => {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 ${
-                  project.featured ? 'ring-2 ring-blue-500 dark:ring-blue-400' : ''
+                className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col justify-between border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 ${
+                  project.featured ? 'ring-2 ring-gray-900 dark:ring-white' : ''
                 }`}
               >
                 <div>
                   {/* Card Header Background */}
-                  <div className={`h-48 bg-gradient-to-br ${project.gradient} relative overflow-hidden flex items-center justify-center p-6`}>
-                    <div className="absolute inset-0 bg-black/20"></div>
-                    
+                  <div className="h-40 bg-gray-900 dark:bg-gray-950 relative flex items-center justify-center p-6">
                     <div className="relative text-center text-white z-10">
-                      <div className="text-5xl mb-2 drop-shadow-md">{project.emoji}</div>
-                      <p className="text-xs uppercase font-bold tracking-widest bg-white/20 backdrop-blur-md px-3 py-1 rounded-full inline-block border border-white/30">
+                      <p className="text-xs uppercase font-bold tracking-widest bg-white/10 backdrop-blur-md px-3 py-1 rounded-full inline-block border border-white/30">
                         {project.technologies[0]} • {project.technologies[1]}
                       </p>
                     </div>
 
                     {project.featured && (
-                      <div className="absolute top-4 right-4 bg-amber-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-md flex items-center">
-                        ★ Featured
+                      <div className="absolute top-4 right-4 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                        Featured
                       </div>
                     )}
                   </div>
@@ -241,7 +215,7 @@ const Profile = () => {
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                       {project.title}
                     </h3>
-                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">
+                    <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-3">
                       {project.tagline}
                     </p>
                     <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
@@ -252,7 +226,7 @@ const Profile = () => {
                     <div className="space-y-1.5 mb-6">
                       {project.features.slice(0, 2).map((feat, i) => (
                         <div key={i} className="flex items-start text-xs text-gray-600 dark:text-gray-400">
-                          <FaCheckCircle className="text-emerald-500 mr-2 shrink-0 mt-0.5" />
+                          <span className="mr-2 text-gray-900 dark:text-white">•</span>
                           <span>{feat}</span>
                         </div>
                       ))}
@@ -263,7 +237,7 @@ const Profile = () => {
                       {project.technologies.map((tech) => (
                         <span
                           key={tech}
-                          className="px-2.5 py-1 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 text-xs font-medium rounded-md border border-blue-200/50 dark:border-blue-700/50"
+                          className="px-2.5 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-md border border-gray-200 dark:border-gray-600"
                         >
                           {tech}
                         </span>
@@ -278,16 +252,14 @@ const Profile = () => {
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gray-900 hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md"
+                    className="flex-1 inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200"
                   >
-                    <FaGithub className="w-4 h-4 mr-2" />
                     Code
                   </a>
                   <button
                     onClick={() => setSelectedDemo(project)}
-                    className="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md hover:scale-[1.02]"
+                    className="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-200 text-white dark:text-gray-900 text-sm font-semibold rounded-xl transition-all duration-200 shadow-md hover:scale-[1.02]"
                   >
-                    <FaExternalLinkAlt className="w-3.5 h-3.5 mr-2" />
                     Live Demo
                   </button>
                 </div>
@@ -307,12 +279,8 @@ const Profile = () => {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {Object.entries(skills).map(([category, skillList]) => (
-              <div key={category} className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 capitalize flex items-center">
-                  {category === 'frontend' && <FaCode className="mr-3 text-blue-500" />}
-                  {category === 'backend' && <FaServer className="mr-3 text-green-500" />}
-                  {category === 'database' && <FaDatabase className="mr-3 text-purple-500" />}
-                  {category === 'tools' && <FaMobile className="mr-3 text-orange-500" />}
+              <div key={category} className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 capitalize">
                   {category} Development
                 </h3>
                 <div className="space-y-6">
@@ -324,13 +292,10 @@ const Profile = () => {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center">
-                          <skill.icon className={`w-5 h-5 mr-3 ${skill.color}`} />
-                          <span className="font-semibold text-gray-900 dark:text-white">
-                            {skill.name}
-                          </span>
-                        </div>
-                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                        <span className="font-semibold text-gray-900 dark:text-white">
+                          {skill.name}
+                        </span>
+                        <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">
                           {skill.level}%
                         </span>
                       </div>
@@ -339,7 +304,7 @@ const Profile = () => {
                           initial={{ width: 0 }}
                           animate={{ width: `${skill.level}%` }}
                           transition={{ duration: 1, delay: index * 0.1 }}
-                          className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full"
+                          className="bg-gray-900 dark:bg-white h-full rounded-full"
                         ></motion.div>
                       </div>
                     </motion.div>
@@ -362,14 +327,13 @@ const Profile = () => {
               className="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700 relative"
             >
               {/* Modal Header */}
-              <div className={`p-6 bg-gradient-to-r ${selectedDemo.gradient} text-white relative`}>
+              <div className="p-6 bg-gray-900 text-white relative">
                 <button
                   onClick={() => setSelectedDemo(null)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors"
+                  className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
                 >
-                  <FaTimes className="w-5 h-5" />
+                  Close
                 </button>
-                <div className="text-4xl mb-2">{selectedDemo.emoji}</div>
                 <h3 className="text-2xl font-bold">{selectedDemo.title}</h3>
                 <p className="text-sm opacity-90">{selectedDemo.tagline}</p>
               </div>
@@ -388,7 +352,7 @@ const Profile = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {selectedDemo.features.map((feat, i) => (
                       <div key={i} className="flex items-center text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-2.5 rounded-lg border border-gray-100 dark:border-gray-600">
-                        <FaCheckCircle className="text-emerald-500 mr-2.5 shrink-0" />
+                        <span className="mr-2.5 text-gray-900 dark:text-white">•</span>
                         <span>{feat}</span>
                       </div>
                     ))}
@@ -399,7 +363,7 @@ const Profile = () => {
                   <h4 className="text-xs uppercase font-bold text-gray-500 dark:text-gray-400 tracking-wider mb-2">Built With</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedDemo.technologies.map((tech) => (
-                      <span key={tech} className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-semibold text-xs rounded-full">
+                      <span key={tech} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-xs rounded-full">
                         {tech}
                       </span>
                     ))}
@@ -412,18 +376,16 @@ const Profile = () => {
                     href={selectedDemo.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-5 py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm rounded-xl transition-all shadow-md"
+                    className="inline-flex items-center justify-center px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold text-sm rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                   >
-                    <FaGithub className="w-4 h-4 mr-2" />
                     View Source Code on GitHub
                   </a>
                   <a
                     href={selectedDemo.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:scale-105"
+                    className="inline-flex items-center justify-center px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold text-sm rounded-xl transition-all shadow-md hover:scale-105"
                   >
-                    <FaExternalLinkAlt className="w-3.5 h-3.5 mr-2" />
                     Open Live Repository / Demo
                   </a>
                 </div>

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { HiMenu, HiX, HiSun, HiMoon } from 'react-icons/hi';
-import { FaSignInAlt, FaSignOutAlt, FaTachometerAlt, FaGithub } from 'react-icons/fa';
 import { useTheme } from '../hooks/useTheme';
-import { PERSONAL_INFO } from '../utils/constants';
 import toast from 'react-hot-toast';
 
 const Navbar = () => {
@@ -59,17 +56,14 @@ const Navbar = () => {
               <img
                 src="/profile.jpg"
                 alt="Eng. Abdirahman"
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-500 shadow-sm group-hover:scale-105 transition-transform duration-200"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-gray-900 dark:border-white shadow-sm group-hover:scale-105 transition-transform duration-200"
               />
             </button>
             <Link to="/" className="flex items-center min-w-0 group">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate"
-              >
+              <div className="font-bold text-gray-900 dark:text-white truncate">
                 <span className="hidden sm:inline text-lg sm:text-xl">Eng.Abdirahman Mohamed Ibrahim</span>
                 <span className="sm:hidden text-sm font-bold truncate">Eng. Abdirahman</span>
-              </motion.div>
+              </div>
             </Link>
           </div>
 
@@ -81,22 +75,22 @@ const Navbar = () => {
                 to={item.path}
                 className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
                   isActive(item.path)
-                    ? 'text-blue-600 dark:text-blue-400'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                    ? 'text-gray-900 dark:text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {item.name}
                 {isActive(item.path) && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 dark:bg-white"
                     initial={false}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
               </Link>
             ))}
-            
+
             {/* Auth Button */}
             {isAdmin ? (
               <div className="flex items-center space-x-4">
@@ -104,27 +98,24 @@ const Navbar = () => {
                   to="/admin"
                   className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                     isActive('/admin')
-                      ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400'
+                      ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
                 >
-                  <FaTachometerAlt className="w-4 h-4 mr-2" />
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+                  className="flex items-center px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
                 >
-                  <FaSignOutAlt className="w-4 h-4 mr-2" />
                   Logout
                 </button>
               </div>
             ) : (
               <Link
                 to="/admin"
-                className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200"
+                className="flex items-center px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-medium shadow-md hover:bg-black dark:hover:bg-gray-200 transition-all duration-200"
               >
-                <FaSignInAlt className="w-4 h-4 mr-2" />
                 Sign In
               </Link>
             )}
@@ -134,18 +125,17 @@ const Navbar = () => {
               href="https://github.com/mucawiyeyare"
               target="_blank"
               rel="noopener noreferrer"
-              title="GitHub Profile"
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
             >
-              <FaGithub className="w-5 h-5" />
+              GitHub
             </a>
 
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
             >
-              {isDark ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
+              {isDark ? 'Light' : 'Dark'}
             </button>
           </div>
 
@@ -153,15 +143,15 @@ const Navbar = () => {
           <div className="md:hidden flex items-center space-x-2">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="px-3 py-2 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
             >
-              {isDark ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
+              {isDark ? 'Light' : 'Dark'}
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="px-3 py-2 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
             >
-              {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
+              {isOpen ? 'Close' : 'Menu'}
             </button>
           </div>
         </div>
@@ -181,14 +171,14 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg transition-colors duration-200 ${
                   isActive(item.path)
-                    ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400'
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
-            
+
             {/* Mobile Auth */}
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
               {isAdmin ? (
@@ -198,11 +188,10 @@ const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                     className={`flex items-center px-3 py-2 text-base font-medium rounded-lg transition-colors duration-200 ${
                       isActive('/admin')
-                        ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400'
+                        ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
-                    <FaTachometerAlt className="w-5 h-5 mr-3" />
                     Dashboard
                   </Link>
                   <button
@@ -210,9 +199,8 @@ const Navbar = () => {
                       setIsOpen(false);
                       handleLogout();
                     }}
-                    className="flex w-full items-center px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200"
+                    className="flex w-full items-center px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors duration-200"
                   >
-                    <FaSignOutAlt className="w-5 h-5 mr-3" />
                     Logout
                   </button>
                 </>
@@ -220,9 +208,8 @@ const Navbar = () => {
                 <Link
                   to="/admin"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center px-3 py-2 mt-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+                  className="flex items-center justify-center px-3 py-2 mt-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-base font-medium rounded-lg shadow-md hover:bg-black dark:hover:bg-gray-200 transition-all duration-200"
                 >
-                  <FaSignInAlt className="w-5 h-5 mr-3" />
                   Sign In
                 </Link>
               )}
@@ -251,9 +238,9 @@ const Navbar = () => {
             type="button"
             onClick={() => setShowPhoto(false)}
             aria-label="Close"
-            className="absolute -top-10 right-0 sm:-right-10 sm:top-0 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors duration-200"
+            className="absolute -top-10 right-0 sm:-right-10 sm:top-0 px-3 py-1.5 rounded-full bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-colors duration-200"
           >
-            <HiX className="w-6 h-6" />
+            Close
           </button>
           <img
             src="/profile.jpg"

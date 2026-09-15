@@ -13,7 +13,7 @@ const Loading = ({ size = 'medium', text = 'Loading...' }) => {
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        className={`${sizeClasses[size]} border-4 border-blue-200 border-t-blue-600 rounded-full`}
+        className={`${sizeClasses[size]} border-4 border-gray-200 dark:border-gray-700 border-t-gray-900 dark:border-t-white rounded-full`}
       />
       {text && (
         <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm">
