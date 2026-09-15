@@ -49,10 +49,11 @@ const ProjectCard = ({ project, index }) => {
       initial="hidden"
       animate="visible"
       variants={cardVariants}
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 group"
+      whileHover={{ y: -8 }}
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 group"
     >
       {/* Logo banner */}
-      <div className="w-full h-36 sm:h-44 bg-gray-900 dark:bg-gray-950 flex items-center justify-center relative">
+      <div className="w-full h-36 sm:h-44 bg-white border-b border-gray-100 dark:border-gray-700 flex items-center justify-center relative">
         {!imgError && logo ? (
           <img
             src={logo}
@@ -61,7 +62,7 @@ const ProjectCard = ({ project, index }) => {
             className="w-20 h-20 sm:w-28 sm:h-28 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
-          <span className="text-4xl sm:text-5xl font-bold text-white tracking-wide">{initials}</span>
+          <span className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-wide">{initials}</span>
         )}
 
         {/* Live Status Badge */}
@@ -121,7 +122,7 @@ const ProjectCard = ({ project, index }) => {
               href={live}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-200 text-white dark:text-gray-900 text-xs sm:text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex-shrink-0"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-200 text-white dark:text-gray-900 text-xs sm:text-sm font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex-shrink-0"
             >
               Live Demo
             </a>
@@ -213,7 +214,8 @@ const Projects = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * i, duration: 0.5 }}
               viewport={{ once: true }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700 shadow-md"
+              whileHover={{ y: -4 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 shadow-md hover:shadow-xl transition-shadow duration-300"
             >
               <div className="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold text-sm sm:text-base mb-4 sm:mb-5 shadow-sm">
                 {cat.role}

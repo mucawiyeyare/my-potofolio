@@ -78,7 +78,7 @@ const About = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative w-full max-w-md mx-auto lg:max-w-none mt-4 lg:mt-0"
           >
-            <div className="relative w-full h-80 sm:h-96 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
+            <div className="relative w-full h-80 sm:h-96 rounded-2xl shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-500 overflow-hidden border border-gray-200 dark:border-gray-800 group">
               <img
                 src="/profile.jpg"
                 alt="Eng Abdirahman Mohamed Ibrahim"
@@ -120,7 +120,8 @@ const About = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 text-center"
+                whileHover={{ y: -6 }}
+                className="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-2xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 text-center transition-all duration-300"
               >
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                   {value.title}
@@ -170,7 +171,7 @@ const About = () => {
                   <div className="absolute left-2.5 sm:left-6.5 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 sm:border-4 border-white dark:border-gray-900 bg-gray-900 dark:bg-white"></div>
 
                   {/* Content */}
-                  <div className="ml-8 sm:ml-16 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg border border-gray-200 dark:border-gray-700 flex-1">
+                  <div className="ml-8 sm:ml-16 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 flex-1 transition-all duration-300 hover:-translate-y-1">
                     <div className="flex items-center mb-2">
                       <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full">
                         {item.year}

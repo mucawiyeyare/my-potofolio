@@ -22,10 +22,11 @@ const TopLiveProjectCard = ({ project, idx }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: idx * 0.1 }}
       viewport={{ once: true }}
-      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 group"
+      whileHover={{ y: -8 }}
+      className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-300 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 group"
     >
       {/* Logo Banner */}
-      <div className="w-full h-36 sm:h-40 bg-gray-900 dark:bg-gray-950 flex items-center justify-center relative">
+      <div className="w-full h-36 sm:h-40 bg-white border-b border-gray-100 dark:border-gray-700 flex items-center justify-center relative">
         {!imgErr && logo ? (
           <img
             src={logo}
@@ -34,7 +35,7 @@ const TopLiveProjectCard = ({ project, idx }) => {
             className="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
-          <span className="text-3xl sm:text-4xl font-bold text-white tracking-wide">{initials}</span>
+          <span className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-wide">{initials}</span>
         )}
 
         {/* Live Status Badge */}
@@ -94,7 +95,7 @@ const TopLiveProjectCard = ({ project, idx }) => {
               href={live}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-200 text-white dark:text-gray-900 text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-200 text-white dark:text-gray-900 text-xs font-bold rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
               Live Demo
             </a>
@@ -201,14 +202,14 @@ const Home = () => {
               >
                 <Link
                   to="/projects"
-                  className="inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm sm:text-base font-semibold rounded-xl hover:bg-black dark:hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  className="inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm sm:text-base font-semibold rounded-xl hover:bg-black dark:hover:bg-gray-200 transition-all duration-200 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
                 >
                   View Top Live Projects
                 </Link>
 
                 <Link
                   to="/contact"
-                  className="inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold rounded-xl hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:text-white transition-all duration-200"
+                  className="inline-flex items-center justify-center px-6 py-3.5 sm:px-8 sm:py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm sm:text-base font-semibold rounded-xl hover:border-gray-900 hover:text-gray-900 dark:hover:border-white dark:hover:text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                 >
                   Get In Touch
                 </Link>
@@ -240,7 +241,7 @@ const Home = () => {
                         href={live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition-all shadow-sm"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white hover:-translate-y-0.5 hover:shadow-md transition-all shadow-sm"
                       >
                         <span className="w-2 h-2 rounded-full bg-gray-900 dark:bg-white"></span>
                         <span className="truncate max-w-[120px] sm:max-w-none">{name}</span>
@@ -258,7 +259,7 @@ const Home = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="relative w-full max-w-md mx-auto lg:max-w-none mt-4 lg:mt-0"
             >
-              <div className="relative w-full h-80 sm:h-96 lg:h-[480px] rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 group">
+              <div className="relative w-full h-80 sm:h-96 lg:h-[480px] rounded-2xl shadow-2xl hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-500 overflow-hidden border border-gray-200 dark:border-gray-800 group">
                 <img
                   src="/profile.jpg"
                   alt="Eng Abdirahman Mohamed Ibrahim"
@@ -351,7 +352,8 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300"
+                whileHover={{ y: -6 }}
+                className="bg-gray-50 dark:bg-gray-800 p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-xl hover:bg-white dark:hover:bg-gray-800/80 transition-all duration-300"
               >
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                   {feature.title}
@@ -384,7 +386,7 @@ const Home = () => {
             </p>
             <Link
               to="/contact"
-              className="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-black transition-all duration-200 transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-100 dark:hover:bg-black transition-all duration-200 transform hover:scale-105 hover:-translate-y-0.5 shadow-lg hover:shadow-2xl"
             >
               Start a Conversation
             </Link>

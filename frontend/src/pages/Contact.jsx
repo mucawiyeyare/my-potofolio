@@ -90,7 +90,7 @@ const Contact = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl border border-gray-200 dark:border-gray-700 transition-shadow duration-300"
           >
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
               Send Message
@@ -231,7 +231,7 @@ const Contact = () => {
             className="space-y-8"
           >
             {/* Contact Details */}
-            <div className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl border border-gray-200 dark:border-gray-700 transition-shadow duration-300">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
                 Contact Information
               </h2>
@@ -274,7 +274,7 @@ const Contact = () => {
             </div>
 
             {/* Social Links */}
-            <div className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="bg-white dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl border border-gray-200 dark:border-gray-700 transition-shadow duration-300">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-6">
                 Follow Me
               </h2>
@@ -285,7 +285,7 @@ const Contact = () => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
                   >
                     {social.name}
                   </a>

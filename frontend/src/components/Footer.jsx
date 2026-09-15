@@ -39,7 +39,7 @@ const Footer = () => {
                 <Link
                   key={link.label}
                   to={link.path}
-                  className="block text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+                  className="block text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:translate-x-1 transition-all duration-200"
                 >
                   {link.label}
                 </Link>
@@ -59,7 +59,7 @@ const Footer = () => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:translate-x-1 transition-all duration-200"
                 >
                   {social.name}
                 </a>

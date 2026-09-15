@@ -690,7 +690,7 @@ const Admin = () => {
                       className="bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700"
                     >
                       {/* Banner */}
-                      <div className="h-36 bg-gray-900 dark:bg-gray-950 relative flex items-center justify-center">
+                      <div className="h-36 bg-white border-b border-gray-100 dark:border-gray-700 relative flex items-center justify-center">
                         {logo ? (
                           <img
                             src={logo}
@@ -699,7 +699,7 @@ const Admin = () => {
                             className="h-20 w-20 object-contain drop-shadow-lg"
                           />
                         ) : (
-                          <span className="text-3xl font-bold text-white tracking-wide">{initials}</span>
+                          <span className="text-3xl font-bold text-gray-900 tracking-wide">{initials}</span>
                         )}
 
                         {/* Category badge */}

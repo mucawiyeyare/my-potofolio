@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { HiMenu, HiX, HiSun, HiMoon } from 'react-icons/hi';
 import { useTheme } from '../hooks/useTheme';
 import toast from 'react-hot-toast';
 
@@ -8,6 +9,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPhoto, setShowPhoto] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
@@ -17,6 +19,13 @@ const Navbar = () => {
     checkAuth();
     window.addEventListener('storage', checkAuth);
     return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   // Re-check on every route change (handles login/logout within same tab)
@@ -42,7 +51,9 @@ const Navbar = () => {
 
   return (
     <>
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+    <nav className={`fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b transition-shadow duration-300 ${
+      scrolled ? 'border-gray-200 dark:border-gray-700 shadow-md' : 'border-transparent shadow-none'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -73,13 +84,16 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 group ${
                   isActive(item.path)
                     ? 'text-gray-900 dark:text-white'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {item.name}
+                {!isActive(item.path) && (
+                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-gray-900 dark:bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center" />
+                )}
                 {isActive(item.path) && (
                   <motion.div
                     layoutId="activeTab"
@@ -114,7 +128,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/admin"
-                className="flex items-center px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-medium shadow-md hover:bg-black dark:hover:bg-gray-200 transition-all duration-200"
+                className="flex items-center px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-medium shadow-md hover:bg-black dark:hover:bg-gray-200 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
               >
                 Sign In
               </Link>
@@ -125,7 +139,7 @@ const Navbar = () => {
               href="https://github.com/mucawiyeyare"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:-translate-y-0.5 transition-all duration-200"
             >
               GitHub
             </a>
@@ -133,9 +147,10 @@ const Navbar = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Toggle theme"
+              className="p-2.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:-translate-y-0.5 hover:rotate-12 transition-all duration-200"
             >
-              {isDark ? 'Light' : 'Dark'}
+              {isDark ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
             </button>
           </div>
 
@@ -143,15 +158,17 @@ const Navbar = () => {
           <div className="md:hidden flex items-center space-x-2">
             <button
               onClick={toggleTheme}
-              className="px-3 py-2 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              aria-label="Toggle theme"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
             >
-              {isDark ? 'Light' : 'Dark'}
+              {isDark ? <HiSun className="w-5 h-5" /> : <HiMoon className="w-5 h-5" />}
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="px-3 py-2 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              aria-label="Toggle menu"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
             >
-              {isOpen ? 'Close' : 'Menu'}
+              {isOpen ? <HiX className="w-6 h-6" /> : <HiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
