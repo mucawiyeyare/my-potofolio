@@ -6,6 +6,7 @@ import Loading from '../components/Loading';
 import AdminAuth from '../components/AdminAuth';
 import { useNavigate } from 'react-router-dom';
 import { getStoredProjects, saveStoredProjects } from '../utils/projectsData';
+import { getStoredCredentials, saveCredentials, validateLogin } from '../utils/adminAuth';
 
 // ─── Empty project form ──────────────────────────────────────────────────────
 const emptyProject = {
@@ -33,6 +34,7 @@ const Admin = () => {
   const [projects, setProjects]               = useState([]);
   const [editingProject, setEditingProject]   = useState(null); // null = no form open
   const [form, setForm]                       = useState(emptyProject);
+  const [accountForm, setAccountForm]         = useState({ currentPassword: '', username: '', newPassword: '', confirmPassword: '' });
   const navigate = useNavigate();
 
   // ── Auth & Data Loading ───────────────────────────────────────────────────
@@ -45,6 +47,7 @@ const Admin = () => {
       setLoading(false);
     }
     setProjects(getStoredProjects());
+    setAccountForm(f => ({ ...f, username: getStoredCredentials().username }));
 
     const handleUpdate = () => {
       setProjects(getStoredProjects());
@@ -60,6 +63,7 @@ const Admin = () => {
   const handleAuthenticated = () => {
     setIsAuthenticated(true);
     setProjects(getStoredProjects());
+    setAccountForm(f => ({ ...f, username: getStoredCredentials().username }));
     fetchMessages();
   };
 
@@ -206,6 +210,38 @@ const Admin = () => {
     toast.success('Project deleted');
   };
 
+  // ── Account ─────────────────────────────────────────────────────────────────
+  const updateAccount = (e) => {
+    e.preventDefault();
+    const { currentPassword, username, newPassword, confirmPassword } = accountForm;
+
+    if (!validateLogin(getStoredCredentials().username, currentPassword)) {
+      toast.error('Current password is incorrect');
+      return;
+    }
+    if (!username.trim()) {
+      toast.error('Username cannot be empty');
+      return;
+    }
+    if (newPassword && newPassword.length < 6) {
+      toast.error('New password must be at least 6 characters');
+      return;
+    }
+    if (newPassword && newPassword !== confirmPassword) {
+      toast.error('New password and confirmation do not match');
+      return;
+    }
+
+    const nextCreds = {
+      username: username.trim(),
+      password: newPassword ? newPassword : getStoredCredentials().password,
+    };
+    saveCredentials(nextCreds);
+    localStorage.setItem('adminUser', nextCreds.username);
+    setAccountForm({ currentPassword: '', username: nextCreds.username, newPassword: '', confirmPassword: '' });
+    toast.success('Account credentials updated');
+  };
+
   // ── Guards ──────────────────────────────────────────────────────────────────
   if (!isAuthenticated) return <AdminAuth onAuthenticated={handleAuthenticated} />;
   if (loading)          return <Loading text="Loading dashboard…" />;
@@ -215,6 +251,7 @@ const Admin = () => {
     { id: 'overview', label: 'Overview' },
     { id: 'messages', label: 'Messages' },
     { id: 'projects', label: 'Projects' },
+    { id: 'account', label: 'Account' },
   ];
 
   return (
@@ -799,6 +836,86 @@ const Admin = () => {
                   );
                 })}
               </div>
+            </motion.div>
+          )}
+
+          {/* ═══════════════ ACCOUNT ═══════════════ */}
+          {activeTab === 'account' && (
+            <motion.div
+              key="account"
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="max-w-lg"
+            >
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
+                Account Settings
+              </h2>
+
+              <form onSubmit={updateAccount} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Change the username and password used to sign in to this dashboard.
+                </p>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                    Current Password *
+                  </label>
+                  <input
+                    type="password"
+                    value={accountForm.currentPassword}
+                    onChange={e => setAccountForm({ ...accountForm, currentPassword: e.target.value })}
+                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent text-sm"
+                    placeholder="Enter your current password"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                    Username *
+                  </label>
+                  <input
+                    type="text"
+                    value={accountForm.username}
+                    onChange={e => setAccountForm({ ...accountForm, username: e.target.value })}
+                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent text-sm"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={accountForm.newPassword}
+                    onChange={e => setAccountForm({ ...accountForm, newPassword: e.target.value })}
+                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent text-sm"
+                    placeholder="Leave blank to keep current password"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={accountForm.confirmPassword}
+                    onChange={e => setAccountForm({ ...accountForm, confirmPassword: e.target.value })}
+                    className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent text-sm"
+                    placeholder="Repeat new password"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 px-6 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl text-sm font-bold shadow hover:bg-black dark:hover:bg-gray-200 transition-all duration-200"
+                >
+                  Save Changes
+                </button>
+              </form>
             </motion.div>
           )}
 

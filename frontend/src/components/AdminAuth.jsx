@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { validateLogin } from '../utils/adminAuth';
 
 const AdminAuth = ({ onAuthenticated }) => {
   const [username, setUsername] = useState('');
@@ -8,15 +9,12 @@ const AdminAuth = ({ onAuthenticated }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Accepted credentials
-  const VALID_PASSWORDS = ['admin123', 'ROTATED_REMOVED'];
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     setTimeout(() => {
-      if (VALID_PASSWORDS.includes(password.trim())) {
+      if (validateLogin(username, password)) {
         localStorage.setItem('adminAuth', 'true');
         localStorage.setItem('adminUser', username.trim() || 'admin');
         onAuthenticated();
@@ -58,7 +56,7 @@ const AdminAuth = ({ onAuthenticated }) => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                placeholder="admin"
+                placeholder="Enter your username"
                 required
               />
             </div>
@@ -75,7 +73,7 @@ const AdminAuth = ({ onAuthenticated }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 pr-16 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-gray-900 dark:focus:ring-white focus:border-transparent transition-colors duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                  placeholder="admin123"
+                  placeholder="Enter your password"
                   required
                 />
                 <button
